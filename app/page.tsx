@@ -5,24 +5,36 @@ import React, { useEffect, useState } from 'react';
 const useCountUp = (end: number) => {
   const [count, setCount] = useState(0);
   useEffect(() => {
-    let startCounter = 0;
+    let frameId = 0;
     const duration = 1500;
-    const increment = end / (duration / 10);
-    const timer = setInterval(() => {
-      startCounter += increment;
-      if (startCounter >= end) {
-        setCount(end);
-        clearInterval(timer);
+    const startTime = performance.now();
+
+    const animate = (time: number) => {
+      const progress = Math.min((time - startTime) / duration, 1);
+      setCount(Math.floor(end * progress * 10) / 10);
+
+      if (progress < 1) {
+        frameId = requestAnimationFrame(animate);
       } else {
-        setCount(Math.floor(startCounter * 10) / 10);
+        setCount(end);
       }
-    }, 10);
-    return () => clearInterval(timer);
-  }, [end]); // Depend only on the final target value
+    };
+
+    frameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frameId);
+  }, [end]);
   return count;
 };
 
 export default function Home() {
+
+  const bgFilter = 'brightness(1.08) saturate(1.15) contrast(1.05)';
+
+  const features = [
+    { title: 'Live Metrics', text: 'Instant heart rate, pace and energy data in a clear HUD overlay.' },
+    { title: 'Adaptive Guidance', text: 'Training cues that adjust to your effort, terrain and goals.' },
+    { title: 'Recovery Signals', text: 'Recovery status that tells you when to push and when to rest.' },
+  ];
 
   const modules = [
     { id: "NK-01", title: "Air Zoom Tech", price: "299", desc: "Footstrike analytics that returns power to every step." },
@@ -33,29 +45,40 @@ export default function Home() {
     { id: "NK-06", title: "Track Master", price: "250", desc: "Route optimization for stadium and street sessions." },
   ];
 
-  const bgFilter = 'brightness(0.82) grayscale(70%)';
-
   const bpm = useCountUp(168); // Elite Heart Rate
   const speed = useCountUp(18.5); // Elite Speed
   const energy = useCountUp(74);
+  const batteryLevel = `${Math.max(12, Math.min(energy, 100))}%`;
+  const speedNeedleAngle = ((Math.min(speed, 20) / 20) * 180 - 90).toFixed(1);
 
   return (
-    <main className="min-h-screen font-sans selection:bg-orange-600 overflow-x-hidden relative scroll-smooth">
+    <main className="min-h-screen bg-black font-sans selection:bg-orange-600 overflow-x-hidden relative scroll-smooth text-white">
+      <header className="absolute inset-x-0 top-0 z-20 bg-black/50 border-b border-white/10 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 text-white">
+          <div>
+            <p className="text-xs uppercase tracking-[0.45em] text-orange-400 font-black">Vision Run</p>
+          </div>
+          <nav className="hidden gap-8 md:flex text-sm uppercase tracking-[0.35em] text-white/80">
+            <a href="#how-it-works" className="transition-colors hover:text-white">How it works</a>
+            <a href="#modules" className="transition-colors hover:text-white">Modules</a>
+            <a href="#testimonials" className="transition-colors hover:text-white">Reviews</a>
+          </nav>
+          <a href="#modules" className="rounded-full bg-orange-500 px-5 py-3 text-[11px] font-black uppercase tracking-[0.35em] text-black transition hover:bg-orange-400">Start now</a>
+        </div>
+      </header>
       
       {/* SECTION 1: ATHLETE HUD */}
-      <section className="relative h-screen w-full flex items-center justify-center p-4">
+      <section className="relative h-screen w-full flex items-center justify-center px-4 pt-24">
         
-        {/* RUNNER BACKDROP (from image_0.png) */}
         <div 
           className="absolute inset-0 z-0 bg-no-repeat bg-cover bg-center"
-          style={{ 
-            backgroundImage: "url('https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=2070&auto=format&fit=crop')", 
-            filter: bgFilter // Moody, high-performance tone
+          style={{
+            backgroundImage: "url('https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=2070&auto=format&fit=crop')",
+            filter: bgFilter,
           }}
         />
         
-        {/* Nike-style gradient from dark to clear */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black z-[1]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/75 z-[1]" />
         
         <div className="relative z-10 w-full max-w-5xl">
           <div className="border-l-4 border-orange-600 pl-8 md:pl-12 animate-[fadeIn_1s_ease-out]">
@@ -68,7 +91,7 @@ export default function Home() {
                 Run Beyond <span className="text-orange-600 drop-shadow-[0_0_15px_rgba(234,88,12,0.5)]">Reality</span>
               </h1>
               <p className="max-w-2xl text-sm text-white/60 mb-6 leading-relaxed">
-                Premium VR performance optics for runners. Live telemetry, route overlays, and immersive feedback — built for the future of training.
+                Premium virtual running glasses for athletes. Live telemetry, route overlays, and immersive feedback — built for the future of training.
               </p>
               <div className="h-2 w-32 bg-white" />
             </div>
@@ -93,6 +116,13 @@ export default function Home() {
                   <span className="text-6xl font-black italic tracking-tighter text-cyan-300">{speed.toFixed(1)}</span>
                   <span className="text-sm text-cyan-200 uppercase tracking-[0.35em] mt-3">KM/H</span>
                 </div>
+                <div className="mt-6 flex items-center justify-center">
+                  <div className="relative w-16 h-16 rounded-full bg-white/5 border border-cyan-300/20">
+                    <div className="absolute inset-0 rounded-full bg-black/70 border border-white/10" />
+                    <div className="absolute left-1/2 bottom-1/2 h-8 w-1.5 bg-cyan-300 rounded-full" style={{ transform: `translateX(-50%) rotate(${speedNeedleAngle}deg)`, transformOrigin: 'bottom center', animation: 'speedNeedleSpin 3s linear infinite' }} />
+                    <div className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-200 shadow-[0_0_10px_rgba(34,211,238,0.45)]" />
+                  </div>
+                </div>
                 <p className="text-[10px] font-mono text-white/40 mt-4 uppercase tracking-[0.3em]">Annot: aerodynamic pace control · velocity locked</p>
               </div>
 
@@ -100,8 +130,12 @@ export default function Home() {
               <div className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-black/30 p-8 shadow-[inset_0_0_30px_rgba(16,185,129,0.08),0_24px_80px_rgba(0,0,0,0.28)] transition-all duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-emerald-400/60 hover:bg-emerald-950/15">
                 <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-emerald-400/60 via-transparent to-emerald-400/60 opacity-70 animate-[flowLine_3.4s_linear_infinite]" />
                 <p className="relative text-[10px] font-black text-emerald-300 uppercase tracking-widest mb-3">Charge</p>
-                <div className="relative flex items-baseline gap-3">
+                <div className="relative flex items-center gap-4">
                   <span className="text-7xl font-black italic tracking-tighter text-white">{energy.toFixed(0)}%</span>
+                  <div className="relative w-20 h-8 rounded-[0.85rem] border border-emerald-400/50 bg-white/5 overflow-hidden">
+                    <div className="absolute inset-y-0 left-0 bg-emerald-400/70 animate-pulse" style={{ width: batteryLevel }} />
+                    <div className="absolute right-0 top-1/2 h-3 w-1 rounded-r-sm bg-emerald-300/80 -translate-y-1/2" />
+                  </div>
                 </div>
                 <p className="text-[10px] font-mono text-white/40 mt-4 uppercase tracking-[0.3em]">Annot: energy reserve online · ready for surge</p>
               </div>
@@ -110,8 +144,24 @@ export default function Home() {
         </div>
       </section>
 
+      <section id="how-it-works" className="max-w-7xl mx-auto px-6 py-24 text-white">
+        <div className="mb-14 max-w-3xl">
+          <p className="text-sm uppercase tracking-[0.4em] text-orange-400 mb-3">How it works</p>
+          <h2 className="text-5xl md:text-6xl font-black uppercase tracking-tight mb-4">Smart running, simplified.</h2>
+          <p className="text-sm text-white/70 leading-relaxed">Vision Run объединяет метрики в реальном времени, адаптивные подсказки и восстановительные сигналы в одном удобном интерфейсе, чтобы тренировки были ясными и продуктивными.</p>
+        </div>
+        <div className="grid gap-6 md:grid-cols-3">
+          {features.map((item) => (
+            <div key={item.title} className="rounded-[2rem] border border-white/10 bg-white/5 p-8 transition hover:border-cyan-400/50 hover:bg-white/10">
+              <p className="text-xs uppercase tracking-[0.4em] text-cyan-200 mb-4">{item.title}</p>
+              <p className="text-sm text-white/70 leading-relaxed">{item.text}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* SECTION 2: PERFORMANCE MODULES */}
-      <section className="max-w-7xl mx-auto px-6 py-32 relative z-10 bg-black/65">
+      <section id="modules" className="max-w-7xl mx-auto px-6 py-32 relative z-10 bg-black/90">
         <div className="flex items-center gap-6 mb-20">
             <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter">Gear Up</h2>
             <div className="h-[2px] flex-1 bg-white/10" />
@@ -172,7 +222,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-6 pb-24 pt-12 relative z-10">
+      <section id="testimonials" className="max-w-7xl mx-auto px-6 pb-24 pt-12 relative z-10">
         <div className="rounded-[3rem] border border-white/10 bg-[#050b15]/80 p-10 md:p-14 shadow-[0_0_90px_rgba(0,0,0,0.28)] transition-all duration-500 hover:shadow-[0_0_110px_rgba(34,211,238,0.18)]">
           <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
             <div>
@@ -199,8 +249,28 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="py-20 text-center border-t border-white/5 opacity-10 font-black italic text-xs tracking-[1.5em] uppercase">
-        Faster. Stronger. Taratynov.
+      <footer className="max-w-7xl mx-auto px-6 py-20 text-white">
+        <div className="grid gap-10 lg:grid-cols-[1.25fr_0.75fr] border-t border-white/10 pt-10">
+          <div>
+            <p className="text-sm uppercase tracking-[0.35em] text-orange-400 mb-4">Vision Run</p>
+            <h2 className="text-3xl font-black uppercase tracking-tight mb-4">Designed for runners who want every run to count.</h2>
+            <p className="max-w-xl text-sm text-white/70 leading-relaxed">Собираем данные в реальном времени, подстраиваем тренировки и помогаем лучше чувствовать свое тело без лишнего шума.</p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.35em] text-white/40 mb-3">Contact</p>
+              <p className="text-sm text-white/70">hello@visionrun.com</p>
+            </div>
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.35em] text-white/40 mb-3">Follow</p>
+              <p className="text-sm text-white/70">Instagram · Telegram · VK</p>
+            </div>
+          </div>
+        </div>
+        <div className="mt-10 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs uppercase tracking-[0.35em] text-white/40 sm:flex-row sm:justify-between">
+          <span>© 2026 Vision Run</span>
+          <span>Faster. Stronger. Без тормозов.</span>
+        </div>
       </footer>
 
       <style jsx global>{`
@@ -208,15 +278,11 @@ export default function Home() {
         @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
         @keyframes pulseLine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
         @keyframes flowLine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        @keyframes speedNeedleSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         html { scroll-behavior: smooth; }
         body {
-          background-color: rgba(0,0,0,0.8);
-          background-image: url('https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=2070&auto=format&fit=crop');
-          background-repeat: no-repeat;
-          background-position: center;
-          background-attachment: fixed;
-          background-size: cover;
-          background-blend-mode: overlay;
+          background-color: #000000;
+          background-image: none;
           margin: 0;
           padding: 0;
           overflow-x: hidden;
