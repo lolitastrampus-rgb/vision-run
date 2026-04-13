@@ -275,7 +275,7 @@ export default function Home() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section id="how-it-works" ref={howRef as React.RefObject<HTMLElement>} className={`max-w-7xl mx-auto px-6 py-24 text-white transition-all duration-700 ${howInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+      <section id="how-it-works" ref={howRef as React.RefObject<HTMLElement>} className={`max-w-7xl mx-auto px-6 py-24 text-white transition-all duration-700 opacity-100 translate-y-0`}>
         <div className="mb-14 max-w-3xl">
           <p className="text-sm uppercase tracking-[0.4em] text-orange-400 mb-3">{l.how.tag}</p>
           <h2 className="text-5xl md:text-6xl font-black uppercase tracking-tight mb-4">{l.how.title}</h2>
@@ -292,7 +292,7 @@ export default function Home() {
       </section>
 
       {/* MODULES */}
-      <section id="modules" ref={modulesRef as React.RefObject<HTMLElement>} className={`max-w-7xl mx-auto px-6 py-32 relative z-10 bg-black/90 transition-all duration-700 ${modulesInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+      <section id="modules" ref={modulesRef as React.RefObject<HTMLElement>} className={`max-w-7xl mx-auto px-6 py-32 relative z-10 bg-black/90 transition-all duration-700 opacity-100 translate-y-0`}>
         <div className="flex items-center gap-6 mb-20">
           <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter">{l.modules.title}</h2>
           <div className="h-[2px] flex-1 bg-white/10" />
@@ -316,7 +316,7 @@ export default function Home() {
       </section>
 
       {/* INCLUDED */}
-      <section ref={includedRef as React.RefObject<HTMLElement>} className={`max-w-7xl mx-auto px-6 pb-24 relative z-10 transition-all duration-700 ${includedInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+      <section ref={includedRef as React.RefObject<HTMLElement>} className={`max-w-7xl mx-auto px-6 pb-24 relative z-10 transition-all duration-700 opacity-100 translate-y-0`}>
         <div className="rounded-[3rem] border border-white/10 bg-[#050b15]/80 p-10 md:p-14 shadow-[0_0_80px_rgba(0,0,0,0.28)] transition-all duration-500">
           <div className="grid gap-10 lg:grid-cols-[1.3fr_0.9fr]">
             <div>
@@ -346,7 +346,7 @@ export default function Home() {
       </section>
 
       {/* REVIEWS */}
-      <section id="testimonials" ref={reviewsRef as React.RefObject<HTMLElement>} className={`max-w-7xl mx-auto px-6 pb-24 pt-12 relative z-10 transition-all duration-700 ${reviewsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+      <section id="testimonials" ref={reviewsRef as React.RefObject<HTMLElement>} className={`max-w-7xl mx-auto px-6 pb-24 pt-12 relative z-10 transition-all duration-700 opacity-100 translate-y-0`}>
         <div className="rounded-[3rem] border border-white/10 bg-[#050b15]/80 p-10 md:p-14 shadow-[0_0_90px_rgba(0,0,0,0.28)] transition-all duration-500 hover:shadow-[0_0_110px_rgba(34,211,238,0.18)]">
           <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
             <div>
@@ -372,7 +372,7 @@ export default function Home() {
       </section>
 
       {/* FOOTER */}
-      <footer ref={footerRef as React.RefObject<HTMLElement>} className={`max-w-7xl mx-auto px-6 py-20 text-white transition-all duration-700 ${footerInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+      <footer ref={footerRef as React.RefObject<HTMLElement>} className={`max-w-7xl mx-auto px-6 py-20 text-white transition-all duration-700 opacity-100 translate-y-0`}>
         <div className="grid gap-10 lg:grid-cols-[1.25fr_0.75fr] border-t border-white/10 pt-10">
           <div>
             <p className="text-sm uppercase tracking-[0.35em] text-orange-400 mb-4">{l.footer.tag}</p>
