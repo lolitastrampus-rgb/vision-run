@@ -269,7 +269,9 @@ export default function Home() {
       const cfDims = gsap.utils.toArray<HTMLElement>('.cf-dim');
       const N  = cfCards.length;
       const cf = { val: 0 };
-      const GAP = () => window.innerWidth < 640 ? 150 : window.innerWidth < 1024 ? 190 : 235;
+      // iTunes Cover Flow spacing: wider gap to centre card, tighter side stacking
+      const GAP_C = () => window.innerWidth < 640 ? 160 : window.innerWidth < 1024 ? 210 : 260;
+      const GAP_S = () => window.innerWidth < 640 ? 115 : window.innerWidth < 1024 ? 145 : 175;
 
       const qX   = cfCards.map(c => gsap.quickSetter(c, 'x',       'px'));
       const qRY  = cfCards.map(c => gsap.quickSetter(c, 'rotateY', 'deg'));
@@ -280,15 +282,29 @@ export default function Home() {
 
       const updateCF = (val: number) => {
         const snapped = Math.round(Math.max(0, Math.min(N - 1, val)));
-        const g = GAP();
+        const gc = GAP_C();
+        const gs = GAP_S();
         cfCards.forEach((_c, i) => {
           const off  = i - val;
           const aOff = Math.abs(off);
-          qX[i](off * g);
-          qRY[i](-off * 50);
-          qScl[i](Math.max(0.65, 1 - aOff * 0.14));
-          qAlp[i](aOff > 2.7 ? 0 : 1);
-          if (qDim[i]) qDim[i](Math.min(0.72, aOff * 0.32));
+          const sign = off >= 0 ? 1 : -1;
+
+          // iTunes-style x: generous gap to first side, then tighter stacking
+          const x = aOff <= 1
+            ? off * gc
+            : sign * (gc + (aOff - 1) * gs);
+
+          // iTunes rotation: snap to ±75° for all non-centre cards
+          const rotY = Math.max(-75, Math.min(75, -off * 75));
+
+          // Scale: centre card full, first side noticeably smaller, rest capped
+          const scl = Math.max(0.60, 1 - Math.min(aOff, 1) * 0.22);
+
+          qX[i](x);
+          qRY[i](rotY);
+          qScl[i](scl);
+          qAlp[i](aOff > 3.2 ? 0 : 1);
+          if (qDim[i]) qDim[i](Math.min(0.68, aOff * 0.30));
         });
         if (snapped !== lastSnapped) {
           lastSnapped = snapped;
@@ -321,7 +337,7 @@ export default function Home() {
       cfDraggable = Draggable.create(cfProxy, {
         type: 'x', trigger: '#cf-stage', cursor: 'grab', activeCursor: 'grabbing',
         onDrag: function(this: { deltaX: number }) {
-          cf.val = Math.max(0, Math.min(N - 1, cf.val - this.deltaX / GAP()));
+          cf.val = Math.max(0, Math.min(N - 1, cf.val - this.deltaX / GAP_C()));
           updateCF(cf.val);
         },
         onDragEnd: function() {
@@ -630,22 +646,43 @@ export default function Home() {
           <span className="hidden md:block text-[9px] uppercase tracking-[0.4em] text-white/20">← drag or scroll →</span>
         </div>
 
-        <div id="cf-stage" className="relative w-full select-none" style={{ height: '470px', perspective: '1200px' }}>
+        <div id="cf-stage" className="relative w-full select-none" style={{ height: '400px', perspective: '1200px' }}>
           {l.modules.items.map((mod, i) => (
-            <div key={mod.id} className="cf-card absolute left-1/2 flex flex-col cursor-pointer" style={{ top: '60px' }}>
-              <div className="relative overflow-hidden rounded-2xl border border-white/[0.07] shadow-[0_8px_40px_rgba(0,0,0,0.6)]" style={{ width: '210px', height: '280px' }}>
+            <div
+              key={mod.id}
+              className="cf-card group absolute left-1/2 cursor-pointer"
+              style={{ top: '60px' }}
+            >
+              {/* Card face */}
+              <div
+                className="relative overflow-hidden rounded-2xl border border-white/[0.08] shadow-[0_12px_50px_rgba(0,0,0,0.65)] transition-[border-color,box-shadow] duration-300 group-hover:border-orange-500/55 group-hover:shadow-[0_0_40px_rgba(249,115,22,0.22),0_12px_50px_rgba(0,0,0,0.65)]"
+                style={{ width: '210px', height: '280px' }}
+              >
+                {/* Dim overlay — GSAP sets opacity */}
                 <div className="cf-dim absolute inset-0 z-10 bg-black rounded-2xl pointer-events-none" style={{ opacity: 0 }} />
-                <img src={COVER_IMAGES[i % COVER_IMAGES.length]} alt={mod.title} className="absolute inset-0 w-full h-full object-cover" draggable={false} />
+
+                <img
+                  src={COVER_IMAGES[i % COVER_IMAGES.length]}
+                  alt={mod.title}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  draggable={false}
+                />
+
+                {/* Bottom gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/92 via-black/10 to-transparent" />
-                <div className="absolute bottom-0 inset-x-0 p-4">
+
+                {/* Hover inner glow */}
+                <div className="absolute inset-0 rounded-2xl pointer-events-none z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-orange-500/[0.08] to-transparent" />
+
+                {/* Top accent line — orange on hover */}
+                <div className="absolute inset-x-0 top-0 h-[2px] rounded-t-2xl bg-gradient-to-r from-transparent via-orange-500/0 to-transparent group-hover:via-orange-500/70 transition-all duration-300 z-30" />
+
+                {/* Card info */}
+                <div className="absolute bottom-0 inset-x-0 p-4 z-20">
                   <p className="font-mono text-[9px] text-orange-400/50 uppercase tracking-[0.4em] mb-1">{mod.id}</p>
-                  <h3 className="text-[15px] font-black italic uppercase leading-tight text-white">{mod.title}</h3>
+                  <h3 className="text-[15px] font-black italic uppercase leading-tight text-white group-hover:text-white transition-colors">{mod.title}</h3>
                   <p className="text-[11px] text-white/30 font-mono mt-0.5">${mod.price} / mo</p>
                 </div>
-              </div>
-              <div className="relative pointer-events-none overflow-hidden" style={{ width: '210px', height: '75px' }}>
-                <div style={{ position: 'absolute', inset: 0, backgroundImage: `url(${COVER_IMAGES[i % COVER_IMAGES.length]})`, backgroundSize: 'cover', backgroundPosition: 'bottom center', transform: 'scaleY(-1)' }} />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.97) 100%)' }} />
               </div>
             </div>
           ))}
