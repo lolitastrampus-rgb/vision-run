@@ -47,17 +47,28 @@ const t = {
         { id: 'NK-06', title: 'Track Master', price: '250', desc: 'Route optimization for stadium and street sessions.' },
       ],
     },
-    included: {
-      tag: "What's included",
-      title: 'A subscription for the future of running optics.',
-      sub: 'Become part of the VR runner ecosystem with live metrics, adaptive coaching, and premium visual features.',
+    ways: {
+      tag: 'Ways to train', title: 'Your ecosystem.',
       items: [
-        { title: 'LIVE METRICS', sub: 'Immersive training', text: 'Live overlays keep your run aligned, focused, and fully visual.' },
-        { title: 'ADAPTIVE GUIDANCE', sub: 'Adaptive coaching', text: 'Every stride is analyzed, every session tuned to your rise.' },
-        { title: 'RECOVERY SIGNALS', sub: 'Recovery insights', text: 'Smart recovery cues that help you train harder and recover faster.' },
+        {
+          icon: 'app',
+          title: 'Vision App',
+          text: 'Plan routes, review sessions and sync all your biometric data. Your complete running dashboard — anywhere you go.',
+          cta: 'Open App', href: '#modules-section',
+        },
+        {
+          icon: 'glasses',
+          title: 'AR Glasses',
+          text: 'See live BPM, pace and route cues projected into your field of view. No phone needed — just run faster.',
+          cta: 'Explore Hardware', href: '#how-it-works',
+        },
+        {
+          icon: 'coach',
+          title: 'Coach Hub',
+          text: 'Connect your coach, share real-time metrics and let adaptive AI fine-tune every training session automatically.',
+          cta: 'Start Training', href: '#modules-section',
+        },
       ],
-      footnote: 'Start your first month in the VR Running Lab.',
-      btn: 'Get Started Now',
     },
     reviews: {
       tag: 'Trusted by runners', title: 'From the road to the run lab.',
@@ -74,6 +85,30 @@ const t = {
       contact: 'Contact', follow: 'Follow', copy: '© 2026 Vision Run', tagline: 'Faster. Stronger. No limits.',
     },
     stats: { ms: 'Response latency', sensors: 'Biometric sensors', battery: 'Battery life' },
+    pricing: {
+      tag: 'Pricing', title: 'Choose your level.', sub: 'Start free. Upgrade when you\'re ready — no lock-in.',
+      monthly: 'Monthly', yearly: 'Yearly · save 20%',
+      plans: [
+        {
+          id: 'STARTER', name: 'Starter', monthlyPrice: '0', yearlyPrice: '0', unit: '/mo',
+          label: 'Free forever', badge: '',
+          features: ['Live BPM + pace overlay', 'Basic route tracking', '1 module access', 'Community support'],
+          cta: 'Download Free', ctaStyle: 'secondary',
+        },
+        {
+          id: 'ATHLETE', name: 'Athlete', monthlyPrice: '29', yearlyPrice: '23', unit: '/mo',
+          label: 'Most popular', badge: 'Popular',
+          features: ['Full HUD suite', 'Adaptive coaching engine', 'All 6 modules unlocked', 'Recovery signals', 'Priority cloud sync'],
+          cta: 'Get Started', ctaStyle: 'primary',
+        },
+        {
+          id: 'ELITE', name: 'Elite', monthlyPrice: '59', yearlyPrice: '47', unit: '/mo',
+          label: 'Maximum performance', badge: '',
+          features: ['Everything in Athlete', 'AI pace coach', 'Unlimited profiles', 'Team sharing', 'Early beta access'],
+          cta: 'Get Started', ctaStyle: 'secondary',
+        },
+      ],
+    },
   },
   ru: {
     nav: { how: 'Как это работает', modules: 'Снаряжение', reviews: 'Отзывы', cta: 'Начать' },
@@ -103,17 +138,28 @@ const t = {
         { id: 'NK-06', title: 'Track Master', price: '250', desc: 'Оптимизация маршрута для стадиона и улицы.' },
       ],
     },
-    included: {
-      tag: 'Что включено',
-      title: 'Подписка на будущее беговой оптики.',
-      sub: 'Стань частью экосистемы VR-бегунов с живыми метриками, адаптивным коучингом и премиальными визуальными функциями.',
+    ways: {
+      tag: 'Как использовать', title: 'Твоя экосистема.',
       items: [
-        { title: 'ЖИВЫЕ МЕТРИКИ', sub: 'Иммерсивные тренировки', text: 'Оверлеи держат твой бег чётким, сфокусированным и визуальным.' },
-        { title: 'АДАПТИВНЫЙ КОУЧИНГ', sub: 'Умный коучинг', text: 'Каждый шаг анализируется, каждая сессия настраивается под твой рост.' },
-        { title: 'СИГНАЛЫ ВОССТАНОВЛЕНИЯ', sub: 'Аналитика восстановления', text: 'Умные сигналы восстановления помогают тренироваться сильнее.' },
+        {
+          icon: 'app',
+          title: 'Vision App',
+          text: 'Планируй маршруты, смотри аналитику и синхронизируй биометрику. Полный беговой дашборд — всегда с тобой.',
+          cta: 'Открыть приложение', href: '#modules-section',
+        },
+        {
+          icon: 'glasses',
+          title: 'AR-очки',
+          text: 'Видь пульс, темп и маршрут прямо в поле зрения. Без телефона — просто надень и беги быстрее.',
+          cta: 'О железе', href: '#how-it-works',
+        },
+        {
+          icon: 'coach',
+          title: 'Coach Hub',
+          text: 'Подключи тренера, делись данными в реальном времени и доверь AI настройку каждой сессии.',
+          cta: 'Начать тренировки', href: '#modules-section',
+        },
       ],
-      footnote: 'Начни свой первый месяц в VR Running Lab.',
-      btn: 'Начать сейчас',
     },
     reviews: {
       tag: 'Доверяют бегуны', title: 'С дороги — в лабораторию бега.',
@@ -130,6 +176,30 @@ const t = {
       contact: 'Контакты', follow: 'Соцсети', copy: '© 2026 Vision Run', tagline: 'Быстрее. Сильнее. Без тормозов.',
     },
     stats: { ms: 'Время отклика', sensors: 'Датчиков биометрии', battery: 'Время работы' },
+    pricing: {
+      tag: 'Тарифы', title: 'Выбери свой уровень.', sub: 'Начни бесплатно. Прокачайся когда будешь готов — без привязки.',
+      monthly: 'Помесячно', yearly: 'Ежегодно · скидка 20%',
+      plans: [
+        {
+          id: 'STARTER', name: 'Starter', monthlyPrice: '0', yearlyPrice: '0', unit: '/мес',
+          label: 'Бесплатно', badge: '',
+          features: ['Живой пульс и темп оверлей', 'Базовая запись маршрута', 'Доступ к 1 модулю', 'Поддержка сообщества'],
+          cta: 'Скачать бесплатно', ctaStyle: 'secondary',
+        },
+        {
+          id: 'ATHLETE', name: 'Athlete', monthlyPrice: '29', yearlyPrice: '23', unit: '/мес',
+          label: 'Самый популярный', badge: 'Популярно',
+          features: ['Полный HUD-комплект', 'Адаптивный коучинг', 'Все 6 модулей', 'Сигналы восстановления', 'Приоритетная синхронизация'],
+          cta: 'Начать', ctaStyle: 'primary',
+        },
+        {
+          id: 'ELITE', name: 'Elite', monthlyPrice: '59', yearlyPrice: '47', unit: '/мес',
+          label: 'Максимальная производительность', badge: '',
+          features: ['Всё из Athlete', 'ИИ-тренер темпа', 'Безлимитные профили', 'Командный доступ', 'Ранний бета-доступ'],
+          cta: 'Начать', ctaStyle: 'secondary',
+        },
+      ],
+    },
   },
 };
 
@@ -160,6 +230,32 @@ export default function Home() {
   const [speedLive,   setSpeedLive]   = useState(18.5);
   const [batteryLive, setBatteryLive] = useState(74);
   const [speedBars, setSpeedBars] = useState([0.45, 0.72, 0.55, 0.88, 0.63, 0.78, 0.70, 0.60]);
+  const [pricingYearly, setPricingYearly] = useState(false);
+
+  type PlanType = typeof t.en.pricing.plans[number];
+  const [selectedPlan, setSelectedPlan] = useState<PlanType | null>(null);
+  const [modalYearly, setModalYearly] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalStep, setModalStep] = useState<'plan' | 'checkout'>('plan');
+
+  const openModal = (plan: PlanType) => {
+    setSelectedPlan(plan);
+    setModalYearly(pricingYearly);
+    setModalStep('plan');
+    requestAnimationFrame(() => setModalVisible(true));
+    document.body.style.overflow = 'hidden';
+  };
+  const closeModal = () => {
+    setModalVisible(false);
+    setTimeout(() => { setSelectedPlan(null); document.body.style.overflow = ''; }, 320);
+  };
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') closeModal(); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (!bpmHovering) { setBpmLive(168); return; }
@@ -361,6 +457,20 @@ export default function Home() {
         );
       });
 
+      // ── Pricing ───────────────────────────────────────────────────────────
+      gsap.fromTo('#pricing-title',
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, ease: 'power2.out',
+          scrollTrigger: { trigger: '#pricing-section', start: 'top 75%', end: 'top 40%', scrub: 0.7 } },
+      );
+      gsap.utils.toArray<Element>('.pricing-card').forEach((el, i) => {
+        gsap.fromTo(el,
+          { opacity: 0, y: 70, scale: 0.96 },
+          { opacity: 1, y: 0, scale: 1, ease: 'power3.out',
+            scrollTrigger: { trigger: '#pricing-section', start: `top ${72 - i * 4}%`, end: `top ${38 - i * 4}%`, scrub: 0.65 } },
+        );
+      });
+
       // ── Testimonials ──────────────────────────────────────────────────────
       gsap.fromTo('#review-left',  { x: -50, opacity: 0 }, { x: 0, opacity: 1, ease: 'power2.out', scrollTrigger: { trigger: '#testimonials', start: 'top 80%', end: 'top 50%', scrub: 0.6 } });
       gsap.fromTo('#review-right', { x:  50, opacity: 0 }, { x: 0, opacity: 1, ease: 'power2.out', scrollTrigger: { trigger: '#testimonials', start: 'top 75%', end: 'top 40%', scrub: 0.7 } });
@@ -381,7 +491,7 @@ export default function Home() {
   const batteryLevel = `${Math.max(12, Math.min(batteryHovering ? batteryLive : energy, 100))}%`;
 
   return (
-    <main className="bg-black text-white overflow-x-hidden">
+    <main className="bg-[#0c0c0c] text-white overflow-x-hidden">
 
       <style jsx global>{`
         @keyframes heartbeat  { 0%, 100% { transform: scale(1); }    50% { transform: scale(1.08); } }
@@ -390,7 +500,7 @@ export default function Home() {
         @keyframes ekgScroll  { from { transform: translateX(0%); }  to   { transform: translateX(-50%); } }
         @keyframes blink      { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
         html { scroll-behavior: smooth; }
-        body { background: #000; margin: 0; padding: 0; overflow-x: hidden; }
+        body { background: #0c0c0c; margin: 0; padding: 0; overflow-x: hidden; }
         .hero-panel { will-change: transform, opacity; }
       `}</style>
 
@@ -425,13 +535,10 @@ export default function Home() {
 
       {/* ── HERO WRAPPER — scroll distance for pinned panels ────────────────── */}
       <div id="hero-wrapper" style={{ height: 'calc(100vh + 1600px)' }}>
-        <section id="hero-section" className="sticky top-0 h-screen w-full overflow-hidden bg-black">
+        <section id="hero-section" className="sticky top-0 h-screen w-full overflow-hidden bg-[#0c0c0c]">
 
-          {/* Shared atmospheric background */}
-          <div className="absolute inset-0 z-0 pointer-events-none">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_85%_20%,rgba(255,90,0,0.07)_0%,transparent_70%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_50%_at_15%_80%,rgba(255,255,255,0.025)_0%,transparent_70%)]" />
-          </div>
+          {/* Single very-subtle vignette for depth */}
+          <div className="absolute inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_120%_80%_at_50%_50%,transparent_40%,rgba(0,0,0,0.55)_100%)]" />
 
           {/* ── PANEL 1: Brand intro ──────────────────────────────────────── */}
           <div className="hero-panel absolute inset-0 flex">
@@ -707,33 +814,191 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── INCLUDED ──────────────────────────────────────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-6 pb-24 pt-12">
-        <div className="rounded-[2.5rem] border border-white/[0.06] bg-white/[0.02] p-10 md:p-16">
-          <div className="grid gap-10 lg:grid-cols-[1.3fr_0.9fr]">
-            <div>
-              <p className="text-[9px] uppercase tracking-[0.55em] text-orange-500 mb-5">{l.included.tag}</p>
-              <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white mb-6 leading-[0.92]">{l.included.title}</h2>
-              <p className="max-w-xl text-sm text-white/40 leading-relaxed">{l.included.sub}</p>
-            </div>
-            <div className="grid gap-3">
-              {l.included.items.map((item, i) => (
-                <div key={i} className="included-card group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 transition-all duration-300 hover:border-orange-500/25 hover:bg-white/[0.05] cursor-pointer">
-                  <p className="text-[9px] font-black uppercase tracking-[0.45em] text-orange-500 mb-2">{item.title}</p>
-                  <p className="text-sm font-bold text-white mb-1">{item.sub}</p>
-                  <p className="text-xs text-white/40 leading-relaxed">{item.text}</p>
-                  <div className="absolute bottom-0 left-0 h-px w-0 bg-orange-500 transition-all duration-500 group-hover:w-full" />
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-t border-white/[0.05] pt-8">
-            <p className="text-[9px] uppercase tracking-[0.45em] text-white/25">{l.included.footnote}</p>
-            <button className="inline-flex items-center justify-center bg-orange-500 px-8 py-4 text-[11px] font-black uppercase tracking-[0.35em] text-black hover:bg-white transition-colors">
-              {l.included.btn}
-            </button>
-          </div>
+      {/* ── WAYS TO TRAIN ─────────────────────────────────────────────────────── */}
+      <section id="ways-section" className="max-w-7xl mx-auto px-6 pb-24 pt-4">
+
+        {/* Header */}
+        <div className="mb-12">
+          <p className="text-[9px] uppercase tracking-[0.55em] text-orange-500 mb-4">{l.ways.tag}</p>
+          <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white leading-none">{l.ways.title}</h2>
         </div>
+
+        {/* Cards grid */}
+        <div className="grid gap-4 md:grid-cols-3">
+          {l.ways.items.map((item, i) => (
+            <div
+              key={i}
+              className="included-card group relative flex flex-col rounded-[2rem] border border-white/[0.07] bg-white/[0.02] p-8 md:p-10 transition-all duration-300 hover:border-orange-500/25 hover:bg-white/[0.04] overflow-hidden cursor-default"
+            >
+              {/* Orange corner glow on hover */}
+              <div className="absolute inset-0 pointer-events-none rounded-[2rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-[radial-gradient(ellipse_80%_60%_at_0%_100%,rgba(249,115,22,0.07),transparent)]" />
+
+              {/* Icon */}
+              <div className="mb-10 w-12 h-12 flex items-center justify-center rounded-2xl border border-white/[0.08] bg-white/[0.04] group-hover:border-orange-500/30 group-hover:bg-orange-500/[0.08] transition-all duration-300">
+                {item.icon === 'app' && (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/50 group-hover:text-orange-400 transition-colors duration-300">
+                    <rect x="5" y="2" width="14" height="20" rx="2" />
+                    <line x1="12" y1="18" x2="12.01" y2="18" />
+                  </svg>
+                )}
+                {item.icon === 'glasses' && (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/50 group-hover:text-orange-400 transition-colors duration-300">
+                    <path d="M2 12h2m16 0h2M4 12a4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0 4 4 4 4 0 0 0 4-4" />
+                    <path d="M8 12a4 4 0 0 1 4-4 4 4 0 0 1 4 4" />
+                  </svg>
+                )}
+                {item.icon === 'coach' && (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/50 group-hover:text-orange-400 transition-colors duration-300">
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                    <path d="M17 11l2 2 4-4" />
+                  </svg>
+                )}
+              </div>
+
+              {/* Content */}
+              <div className="flex-1">
+                <h3 className="text-2xl md:text-3xl font-black italic uppercase tracking-tight text-white mb-4 leading-tight">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-white/40 leading-relaxed">
+                  {item.text}
+                </p>
+              </div>
+
+              {/* Bottom divider */}
+              <div className="mt-8 mb-6 h-px bg-white/[0.05] group-hover:bg-orange-500/15 transition-colors duration-300" />
+
+              {/* Dual button row — like the reference */}
+              <div className="flex items-center gap-3">
+                <a
+                  href={item.href}
+                  className="flex-1 flex items-center justify-center py-3.5 px-5 bg-white text-black font-black uppercase text-[10px] tracking-[0.35em] rounded-xl hover:bg-orange-500 transition-colors duration-200 active:scale-[0.98]"
+                >
+                  {item.cta}
+                </a>
+                <a
+                  href={item.href}
+                  className="w-12 h-12 shrink-0 flex items-center justify-center rounded-xl border border-white/[0.1] text-white/40 hover:border-orange-500/50 hover:text-orange-400 hover:bg-orange-500/[0.08] transition-all duration-200"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M7 17L17 7M7 7h10v10" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── PRICING ───────────────────────────────────────────────────────────── */}
+      <section id="pricing-section" className="max-w-7xl mx-auto px-6 pb-24 pt-4">
+
+        {/* Header */}
+        <div id="pricing-title" className="mb-14 max-w-3xl">
+          <p className="text-[9px] uppercase tracking-[0.55em] text-orange-500 mb-5">{l.pricing.tag}</p>
+          <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter mb-5 leading-none text-white">{l.pricing.title}</h2>
+          <p className="text-sm text-white/40 leading-relaxed max-w-lg">{l.pricing.sub}</p>
+        </div>
+
+        {/* Monthly / Yearly toggle */}
+        <div className="flex items-center gap-1 mb-12 p-1 rounded-full border border-white/[0.08] bg-white/[0.03] w-fit">
+          {[false, true].map((isYearly) => (
+            <button
+              key={String(isYearly)}
+              onClick={() => setPricingYearly(isYearly)}
+              className={`px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.35em] transition-all duration-200 ${
+                pricingYearly === isYearly
+                  ? 'bg-orange-500 text-black shadow-[0_0_20px_rgba(249,115,22,0.35)]'
+                  : 'text-white/35 hover:text-white/60'
+              }`}
+            >
+              {isYearly ? l.pricing.yearly : l.pricing.monthly}
+            </button>
+          ))}
+        </div>
+
+        {/* Cards */}
+        <div className="grid gap-4 md:grid-cols-3">
+          {l.pricing.plans.map((plan) => {
+            const isHighlighted = plan.ctaStyle === 'primary';
+            const price = pricingYearly ? plan.yearlyPrice : plan.monthlyPrice;
+            return (
+              <div
+                key={plan.id}
+                className={`pricing-card relative flex flex-col rounded-[2rem] border p-8 md:p-10 transition-all duration-300 group cursor-default ${
+                  isHighlighted
+                    ? 'border-orange-500/40 bg-gradient-to-b from-orange-500/[0.07] to-transparent shadow-[0_0_60px_rgba(249,115,22,0.12),inset_0_0_0_1px_rgba(249,115,22,0.12)]'
+                    : 'border-white/[0.06] bg-white/[0.02] hover:border-white/[0.12] hover:bg-white/[0.04]'
+                }`}
+              >
+                {/* Badge */}
+                {plan.badge && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <span className="px-4 py-1 bg-orange-500 text-black font-black uppercase text-[9px] tracking-[0.4em] rounded-full shadow-[0_0_20px_rgba(249,115,22,0.5)]">
+                      {plan.badge}
+                    </span>
+                  </div>
+                )}
+
+                {/* Plan name + label */}
+                <div className="mb-8">
+                  <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-white/25 mb-2">{plan.id}</p>
+                  <h3 className={`text-2xl font-black italic uppercase tracking-tight mb-1 ${isHighlighted ? 'text-white' : 'text-white/80'}`}>
+                    {plan.name}
+                  </h3>
+                  <p className="text-[9px] uppercase tracking-[0.35em] text-white/25">{plan.label}</p>
+                </div>
+
+                {/* Price */}
+                <div className="flex items-baseline gap-1 mb-8">
+                  {price === '0' ? (
+                    <span className="text-6xl font-black italic tracking-tighter text-white">Free</span>
+                  ) : (
+                    <>
+                      <span className={`text-[2rem] font-black italic mt-1 ${isHighlighted ? 'text-orange-400' : 'text-white/50'}`}>$</span>
+                      <span className={`text-6xl font-black italic tracking-tighter leading-none ${isHighlighted ? 'text-white' : 'text-white'}`}>
+                        {price}
+                      </span>
+                      <span className="text-[11px] text-white/30 uppercase tracking-[0.3em] mb-1 self-end">{plan.unit}</span>
+                    </>
+                  )}
+                </div>
+
+                {/* Divider */}
+                <div className={`h-px mb-8 ${isHighlighted ? 'bg-orange-500/20' : 'bg-white/[0.05]'}`} />
+
+                {/* Features */}
+                <ul className="space-y-3.5 mb-10 flex-1">
+                  {plan.features.map((feat, fi) => (
+                    <li key={fi} className="flex items-start gap-3">
+                      <span className={`mt-0.5 shrink-0 text-sm leading-none ${isHighlighted ? 'text-orange-500' : 'text-white/30'}`}>✓</span>
+                      <span className="text-[12px] text-white/55 leading-snug">{feat}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* CTA */}
+                <button
+                  onClick={() => openModal(plan)}
+                  className={`w-full py-4 font-black uppercase text-[11px] tracking-[0.35em] transition-all duration-200 active:scale-[0.98] ${
+                    isHighlighted
+                      ? 'bg-orange-500 text-black hover:bg-white shadow-[0_0_30px_rgba(249,115,22,0.35)]'
+                      : 'border border-white/[0.12] text-white/50 hover:border-white/30 hover:text-white bg-transparent'
+                  }`}
+                >
+                  {plan.cta}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Bottom footnote */}
+        <p className="mt-8 text-center text-[9px] uppercase tracking-[0.45em] text-white/20">
+          No credit card required · Cancel anytime · Secure payments
+        </p>
+
       </section>
 
       {/* ── TESTIMONIALS ──────────────────────────────────────────────────────── */}
@@ -798,6 +1063,220 @@ export default function Home() {
           <span>{l.footer.tagline}</span>
         </div>
       </footer>
+
+      {/* ── PLAN MODAL ────────────────────────────────────────────────────────── */}
+      {selectedPlan && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8"
+          style={{
+            transition: 'opacity 0.32s ease, backdrop-filter 0.32s ease',
+            opacity: modalVisible ? 1 : 0,
+            backdropFilter: modalVisible ? 'blur(18px) saturate(0.6)' : 'blur(0px)',
+            background: modalVisible ? 'rgba(0,0,0,0.82)' : 'rgba(0,0,0,0)',
+            pointerEvents: modalVisible ? 'auto' : 'none',
+          }}
+          onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}
+        >
+          <div
+            className="relative w-full max-w-lg"
+            style={{
+              transition: 'transform 0.35s cubic-bezier(0.22,1,0.36,1), opacity 0.32s ease',
+              transform: modalVisible ? 'translateY(0) scale(1)' : 'translateY(40px) scale(0.97)',
+              opacity: modalVisible ? 1 : 0,
+            }}
+          >
+            {/* Modal card */}
+            <div className={`relative overflow-hidden rounded-[2rem] border bg-[#0e0e0e] ${selectedPlan.ctaStyle === 'primary' ? 'border-orange-500/30 shadow-[0_0_80px_rgba(249,115,22,0.15)]' : 'border-white/[0.1]'}`}>
+
+              {/* Top accent */}
+              {selectedPlan.ctaStyle === 'primary' && (
+                <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-orange-500 to-transparent" />
+              )}
+
+              {/* Close */}
+              <button
+                onClick={closeModal}
+                className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full border border-white/[0.08] text-white/30 hover:text-white hover:border-white/30 transition-all z-10 text-lg leading-none"
+              >×</button>
+
+              {modalStep === 'plan' ? (
+                <div className="p-8 md:p-10">
+
+                  {/* Plan header */}
+                  <div className="mb-8">
+                    <p className="font-mono text-[9px] uppercase tracking-[0.5em] text-white/25 mb-2">{selectedPlan.id}</p>
+                    <div className="flex items-center gap-3 mb-1">
+                      <h3 className="text-3xl font-black italic uppercase tracking-tight text-white">{selectedPlan.name}</h3>
+                      {selectedPlan.badge && (
+                        <span className="px-3 py-1 bg-orange-500 text-black font-black uppercase text-[8px] tracking-[0.4em] rounded-full">
+                          {selectedPlan.badge}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[10px] uppercase tracking-[0.35em] text-white/25">{selectedPlan.label}</p>
+                  </div>
+
+                  {/* Billing toggle */}
+                  <div className="flex items-center gap-1 mb-6 p-1 rounded-full border border-white/[0.07] bg-white/[0.03] w-fit">
+                    {[false, true].map((isY) => (
+                      <button
+                        key={String(isY)}
+                        onClick={() => setModalYearly(isY)}
+                        className={`px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-[0.35em] transition-all duration-200 ${
+                          modalYearly === isY
+                            ? 'bg-orange-500 text-black'
+                            : 'text-white/35 hover:text-white/60'
+                        }`}
+                      >
+                        {isY ? l.pricing.yearly : l.pricing.monthly}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Price display */}
+                  <div className="flex items-baseline gap-1.5 mb-8">
+                    {(modalYearly ? selectedPlan.yearlyPrice : selectedPlan.monthlyPrice) === '0' ? (
+                      <span className="text-7xl font-black italic tracking-tighter text-white">Free</span>
+                    ) : (
+                      <>
+                        <span className="text-2xl font-black italic text-orange-400 mt-2">$</span>
+                        <span className="text-7xl font-black italic tracking-tighter leading-none text-white">
+                          {modalYearly ? selectedPlan.yearlyPrice : selectedPlan.monthlyPrice}
+                        </span>
+                        <div className="self-end mb-2">
+                          <p className="text-[10px] text-white/30 uppercase tracking-[0.3em]">{selectedPlan.unit}</p>
+                          {modalYearly && selectedPlan.yearlyPrice !== '0' && (
+                            <p className="text-[9px] text-orange-400/70 uppercase tracking-[0.2em]">billed yearly</p>
+                          )}
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Divider */}
+                  <div className={`h-px mb-7 ${selectedPlan.ctaStyle === 'primary' ? 'bg-orange-500/15' : 'bg-white/[0.05]'}`} />
+
+                  {/* Features */}
+                  <ul className="space-y-3 mb-9">
+                    {selectedPlan.features.map((feat, fi) => (
+                      <li key={fi} className="flex items-center gap-3">
+                        <span className={`w-5 h-5 shrink-0 flex items-center justify-center rounded-full text-[10px] font-black ${selectedPlan.ctaStyle === 'primary' ? 'bg-orange-500/15 text-orange-400' : 'bg-white/[0.06] text-white/40'}`}>✓</span>
+                        <span className="text-[13px] text-white/65">{feat}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* CTA */}
+                  {(modalYearly ? selectedPlan.yearlyPrice : selectedPlan.monthlyPrice) === '0' ? (
+                    <button
+                      onClick={closeModal}
+                      className="w-full py-4 font-black uppercase text-[11px] tracking-[0.35em] border border-white/[0.12] text-white/60 hover:border-white/30 hover:text-white bg-transparent transition-all duration-200"
+                    >
+                      {selectedPlan.cta}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setModalStep('checkout')}
+                      className={`w-full py-4 font-black uppercase text-[11px] tracking-[0.35em] transition-all duration-200 active:scale-[0.98] ${
+                        selectedPlan.ctaStyle === 'primary'
+                          ? 'bg-orange-500 text-black hover:bg-white shadow-[0_0_30px_rgba(249,115,22,0.4)]'
+                          : 'bg-white text-black hover:bg-orange-500'
+                      }`}
+                    >
+                      Continue →
+                    </button>
+                  )}
+
+                  <p className="mt-4 text-center text-[9px] uppercase tracking-[0.4em] text-white/20">
+                    Secure checkout · Cancel anytime
+                  </p>
+                </div>
+              ) : (
+                /* ── CHECKOUT STEP ── */
+                <div className="p-8 md:p-10">
+                  <button
+                    onClick={() => setModalStep('plan')}
+                    className="flex items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-white/30 hover:text-white mb-8 transition-colors"
+                  >
+                    ← {selectedPlan.name} · ${modalYearly ? selectedPlan.yearlyPrice : selectedPlan.monthlyPrice}{selectedPlan.unit}
+                  </button>
+
+                  <h3 className="text-2xl font-black italic uppercase tracking-tight text-white mb-7">Complete order</h3>
+
+                  {/* Form */}
+                  <div className="space-y-3 mb-7">
+                    {[
+                      { label: 'Full name', type: 'text', placeholder: 'Alex Runner' },
+                      { label: 'Email', type: 'email', placeholder: 'you@example.com' },
+                    ].map((field) => (
+                      <div key={field.label}>
+                        <p className="text-[9px] uppercase tracking-[0.4em] text-white/30 mb-1.5">{field.label}</p>
+                        <input
+                          type={field.type}
+                          placeholder={field.placeholder}
+                          className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-orange-500/50 focus:bg-white/[0.06] transition-all"
+                        />
+                      </div>
+                    ))}
+
+                    {/* Card number */}
+                    <div>
+                      <p className="text-[9px] uppercase tracking-[0.4em] text-white/30 mb-1.5">Card number</p>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          placeholder="•••• •••• •••• ••••"
+                          maxLength={19}
+                          className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-orange-500/50 focus:bg-white/[0.06] transition-all pr-16"
+                        />
+                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 text-xs tracking-wider">VISA</span>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <p className="text-[9px] uppercase tracking-[0.4em] text-white/30 mb-1.5">Expires</p>
+                        <input type="text" placeholder="MM / YY" maxLength={7} className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-orange-500/50 transition-all" />
+                      </div>
+                      <div>
+                        <p className="text-[9px] uppercase tracking-[0.4em] text-white/30 mb-1.5">CVC</p>
+                        <input type="text" placeholder="•••" maxLength={3} className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-orange-500/50 transition-all" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Order summary */}
+                  <div className={`rounded-xl p-4 mb-6 border ${selectedPlan.ctaStyle === 'primary' ? 'bg-orange-500/[0.06] border-orange-500/15' : 'bg-white/[0.03] border-white/[0.06]'}`}>
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <p className="text-sm font-bold text-white">{selectedPlan.name} Plan</p>
+                        <p className="text-[9px] uppercase tracking-[0.3em] text-white/30">{modalYearly ? 'Billed annually' : 'Billed monthly'}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-lg font-black italic text-white">${modalYearly ? selectedPlan.yearlyPrice : selectedPlan.monthlyPrice}<span className="text-sm text-white/40">{selectedPlan.unit}</span></p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    className={`w-full py-4 font-black uppercase text-[11px] tracking-[0.4em] transition-all duration-200 active:scale-[0.98] ${
+                      selectedPlan.ctaStyle === 'primary'
+                        ? 'bg-orange-500 text-black hover:bg-white shadow-[0_0_30px_rgba(249,115,22,0.35)]'
+                        : 'bg-white text-black hover:bg-orange-500'
+                    }`}
+                  >
+                    Pay ${modalYearly ? selectedPlan.yearlyPrice : selectedPlan.monthlyPrice}{selectedPlan.unit}
+                  </button>
+
+                  <p className="mt-4 text-center text-[9px] uppercase tracking-[0.4em] text-white/20">
+                    🔒 256-bit SSL · Cancel anytime
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
     </main>
   );
