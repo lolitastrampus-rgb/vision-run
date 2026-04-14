@@ -149,7 +149,7 @@ const t = {
 };
 
 export default function Home() {
-  const [lang, setLang] = useState<'en' | 'ru'>('en');
+  const [lang, setLang] = useState<'en' | 'ru'>('ru');
   const l = t[lang];
   const bgFilter = 'brightness(1.08) saturate(1.15) contrast(1.05)';
   const [titleVisible, setTitleVisible] = useState(false);
@@ -160,37 +160,196 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    let ScrollTriggerInstance: any;
+    let mounted = true;
+    let stRef: { getAll(): { kill(): void }[] } | undefined;
+
     const loadGSAP = async () => {
       const { gsap } = await import('gsap');
       const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+      if (!mounted) return;
       gsap.registerPlugin(ScrollTrigger);
-      ScrollTriggerInstance = ScrollTrigger;
+      stRef = ScrollTrigger;
 
-      gsap.utils.toArray('.gsap-section').forEach((el: any) => {
-        gsap.fromTo(el,
-          { opacity: 0, y: 60 },
+      // Scroll progress bar
+      gsap.to('#scroll-progress', {
+        scaleX: 1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: document.documentElement,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 0,
+        },
+      });
+
+      // Hero background parallax
+      gsap.to('#hero-bg', {
+        yPercent: 35,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#hero-section',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        },
+      });
+
+      // Hero content fade out while scrolling away
+      gsap.to('#hero-content', {
+        opacity: 0,
+        y: -60,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#hero-section',
+          start: '35% top',
+          end: 'bottom top',
+          scrub: 1,
+        },
+      });
+
+      // "How it works" — title clip reveal on scrub
+      gsap.fromTo(
+        '#how-title',
+        { clipPath: 'inset(0 100% 0 0)' },
+        {
+          clipPath: 'inset(0 0% 0 0)',
+          ease: 'power1.inOut',
+          scrollTrigger: {
+            trigger: '#how-it-works',
+            start: 'top 70%',
+            end: 'top 20%',
+            scrub: 1,
+          },
+        }
+      );
+
+      // "How it works" sub-text fade
+      gsap.fromTo(
+        '#how-sub',
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1, y: 0,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '#how-it-works',
+            start: 'top 60%',
+            end: 'top 30%',
+            scrub: 0.8,
+          },
+        }
+      );
+
+      // "How it works" cards — stagger scrub
+      gsap.utils.toArray<Element>('.how-card').forEach((el, i) => {
+        gsap.fromTo(
+          el,
+          { opacity: 0, y: 70, scale: 0.94 },
           {
-            opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
-            scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' }
+            opacity: 1, y: 0, scale: 1,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 88%',
+              end: 'top 55%',
+              scrub: 0.6,
+            },
           }
         );
       });
 
-      gsap.utils.toArray('.gsap-card').forEach((el: any) => {
-        gsap.fromTo(el,
-          { opacity: 0, y: 40 },
+      // Modules — horizontal scroll on desktop
+      const mm = gsap.matchMedia();
+      mm.add('(min-width: 768px)', () => {
+        const section = document.querySelector('#modules-section') as HTMLElement;
+        const track = document.querySelector('#modules-track') as HTMLElement;
+        if (!section || !track) return;
+
+        const getAmount = () => -(track.scrollWidth - window.innerWidth);
+
+        gsap.to(track, {
+          x: getAmount,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            pin: true,
+            anticipatePin: 1,
+            start: 'top top',
+            end: () => `+=${Math.abs(getAmount())}`,
+            scrub: 1.2,
+            invalidateOnRefresh: true,
+          },
+        });
+      });
+
+      // Included section cards — slide from right
+      gsap.utils.toArray<Element>('.included-card').forEach((el) => {
+        gsap.fromTo(
+          el,
+          { opacity: 0, x: 70 },
           {
-            opacity: 1, y: 0, duration: 0.6, ease: 'power2.out',
-            scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none none' }
+            opacity: 1, x: 0,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 88%',
+              end: 'top 60%',
+              scrub: 0.5,
+            },
           }
         );
       });
+
+      // Testimonials — slide from both sides
+      gsap.fromTo(
+        '#review-left',
+        { opacity: 0, x: -80 },
+        {
+          opacity: 1, x: 0,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '#testimonials',
+            start: 'top 72%',
+            end: 'top 38%',
+            scrub: 0.8,
+          },
+        }
+      );
+      gsap.fromTo(
+        '#review-right',
+        { opacity: 0, x: 80 },
+        {
+          opacity: 1, x: 0,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '#testimonials',
+            start: 'top 72%',
+            end: 'top 38%',
+            scrub: 0.8,
+          },
+        }
+      );
+
+      // Footer — fade up
+      gsap.fromTo(
+        'footer',
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1, y: 0,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: 'footer',
+            start: 'top 90%',
+            end: 'top 60%',
+            scrub: 0.6,
+          },
+        }
+      );
     };
 
     loadGSAP();
     return () => {
-      if (ScrollTriggerInstance) ScrollTriggerInstance.getAll().forEach((t: any) => t.kill());
+      mounted = false;
+      if (stRef) stRef.getAll().forEach((trigger) => trigger.kill());
     };
   }, []);
 
@@ -201,29 +360,41 @@ export default function Home() {
   const speedNeedleAngle = ((Math.min(speed, 20) / 20) * 180 - 90).toFixed(1);
 
   return (
-    <main className="min-h-screen bg-black font-sans selection:bg-orange-600 overflow-x-hidden relative scroll-smooth text-white">
+    <main className="min-h-screen bg-black font-sans selection:bg-orange-600 relative scroll-smooth text-white">
+
+      {/* Scroll progress bar */}
+      <div
+        id="scroll-progress"
+        className="fixed top-0 left-0 right-0 h-[2px] z-50 bg-gradient-to-r from-orange-500 via-orange-400 to-cyan-400"
+        style={{ transform: 'scaleX(0)', transformOrigin: 'left' }}
+      />
 
       <header className="absolute inset-x-0 top-0 z-20 bg-black/50 border-b border-white/10 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 text-white">
           <p className="text-xs uppercase tracking-[0.45em] text-white font-black transition-all duration-300 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] cursor-default">Vision Run</p>
           <nav className="hidden gap-8 md:flex text-sm uppercase tracking-[0.35em] text-white/80">
             <a href="#how-it-works" className="text-sm font-semibold leading-6 text-white/60 transition-all duration-300 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]">{l.nav.how}</a>
-            <a href="#modules" className="text-sm font-semibold leading-6 text-white/60 transition-all duration-300 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]">{l.nav.modules}</a>
+            <a href="#modules-section" className="text-sm font-semibold leading-6 text-white/60 transition-all duration-300 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]">{l.nav.modules}</a>
             <a href="#testimonials" className="text-sm font-semibold leading-6 text-white/60 transition-all duration-300 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]">{l.nav.reviews}</a>
           </nav>
           <div className="flex items-center gap-3">
             <button onClick={() => setLang(lang === 'en' ? 'ru' : 'en')} className="text-xs font-black uppercase tracking-widest text-white/50 hover:text-white transition-all duration-300 border border-white/10 rounded-full px-3 py-1.5 hover:border-white/40">
               {lang === 'en' ? 'RU' : 'EN'}
             </button>
-            <a href="#modules" className="inline-block rounded-full border border-white/20 bg-white/10 px-8 py-3 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black hover:shadow-[0_0_30px_rgba(255,255,255,0.8)] hover:scale-105">{l.nav.cta}</a>
+            <a href="#modules-section" className="inline-block rounded-full border border-white/20 bg-white/10 px-8 py-3 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black hover:shadow-[0_0_30px_rgba(255,255,255,0.8)] hover:scale-105">{l.nav.cta}</a>
           </div>
         </div>
       </header>
 
-      <section className="relative h-screen w-full flex items-center justify-center px-4 pt-24">
-        <div className="absolute inset-0 z-0 bg-no-repeat bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=2070&auto=format&fit=crop')", filter: bgFilter }} />
+      {/* ── HERO ─────────────────────────────────────────── */}
+      <section id="hero-section" className="relative h-screen w-full flex items-center justify-center px-4 pt-24 overflow-hidden">
+        <div
+          id="hero-bg"
+          className="absolute inset-0 z-0 bg-no-repeat bg-cover bg-center will-change-transform"
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=2070&auto=format&fit=crop')", filter: bgFilter }}
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/85 z-[1]" />
-        <div className="relative z-10 w-full max-w-5xl">
+        <div id="hero-content" className="relative z-10 w-full max-w-5xl will-change-transform">
           <div className="border-l-4 border-orange-600 pl-8 md:pl-12 animate-[fadeIn_1s_ease-out]">
             <div className="mb-12">
               <div className="mb-4">
@@ -238,7 +409,7 @@ export default function Home() {
               <div className="h-2 w-32 bg-white" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-              <div className="gsap-card group relative overflow-hidden rounded-[2rem] border border-white/10 bg-black/40 p-8 shadow-[inset_0_0_45px_rgba(255,255,255,0.05),0_24px_80px_rgba(0,0,0,0.35)] transition-all duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-red-400/50 hover:bg-red-950/20">
+              <div className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-black/40 p-8 shadow-[inset_0_0_45px_rgba(255,255,255,0.05),0_24px_80px_rgba(0,0,0,0.35)] transition-all duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-red-400/50 hover:bg-red-950/20">
                 <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-red-500/70 via-transparent to-red-500/70 opacity-80 animate-[pulseLine_2.4s_linear_infinite]" />
                 <p className="relative text-[10px] font-black text-red-300 uppercase tracking-widest mb-3">{l.hud.bpm}</p>
                 <div className="relative flex items-baseline gap-3">
@@ -247,7 +418,7 @@ export default function Home() {
                 </div>
                 <p className="text-[10px] font-mono text-white/40 mt-4 uppercase tracking-[0.3em]">{l.hud.bpmAnnot}</p>
               </div>
-              <div className="gsap-card group relative overflow-hidden rounded-[2rem] border border-white/10 bg-black/35 p-8 shadow-[inset_0_0_30px_rgba(56,189,248,0.08),0_24px_80px_rgba(0,0,0,0.32)] transition-all duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-cyan-400/60 hover:bg-cyan-950/15">
+              <div className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-black/35 p-8 shadow-[inset_0_0_30px_rgba(56,189,248,0.08),0_24px_80px_rgba(0,0,0,0.32)] transition-all duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-cyan-400/60 hover:bg-cyan-950/15">
                 <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-cyan-400/60 via-transparent to-cyan-400/60 opacity-70 animate-[flowLine_3s_linear_infinite]" />
                 <p className="relative text-[10px] font-black text-cyan-300 uppercase tracking-widest mb-3">{l.hud.kmh}</p>
                 <div className="relative flex items-baseline gap-3">
@@ -257,13 +428,13 @@ export default function Home() {
                 <div className="mt-6 flex items-center justify-center">
                   <div className="relative w-16 h-16 rounded-full bg-white/5 border border-cyan-300/20">
                     <div className="absolute inset-0 rounded-full bg-black/70 border border-white/10" />
-                    <div className="absolute left-1/2 bottom-1/2 h-8 w-1.5 bg-cyan-300 rounded-full" style={{ transform: `translateX(-50%) rotate(${speedNeedleAngle}deg)`, transformOrigin: 'bottom center', animation: 'speedNeedleSpin 3s linear infinite' }} />
+                    <div className="absolute left-1/2 bottom-1/2 h-8 w-1.5 bg-cyan-300 rounded-full" style={{ transform: `translateX(-50%) rotate(${speedNeedleAngle}deg)`, transformOrigin: 'bottom center' }} />
                     <div className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-200 shadow-[0_0_10px_rgba(34,211,238,0.45)]" />
                   </div>
                 </div>
                 <p className="text-[10px] font-mono text-white/40 mt-4 uppercase tracking-[0.3em]">{l.hud.kmhAnnot}</p>
               </div>
-              <div className="gsap-card group relative overflow-hidden rounded-[2rem] border border-white/10 bg-black/30 p-8 shadow-[inset_0_0_30px_rgba(16,185,129,0.08),0_24px_80px_rgba(0,0,0,0.28)] transition-all duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-emerald-400/60 hover:bg-emerald-950/15">
+              <div className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-black/30 p-8 shadow-[inset_0_0_30px_rgba(16,185,129,0.08),0_24px_80px_rgba(0,0,0,0.28)] transition-all duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-emerald-400/60 hover:bg-emerald-950/15">
                 <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-emerald-400/60 via-transparent to-emerald-400/60 opacity-70 animate-[flowLine_3.4s_linear_infinite]" />
                 <p className="relative text-[10px] font-black text-emerald-300 uppercase tracking-widest mb-3">{l.hud.charge}</p>
                 <div className="relative flex items-center gap-4">
@@ -278,17 +449,24 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* Scroll hint */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 animate-[scrollHint_2s_ease-in-out_infinite]">
+          <span className="text-[10px] uppercase tracking-[0.4em] text-white/30">Scroll</span>
+          <div className="w-[1px] h-10 bg-gradient-to-b from-white/30 to-transparent" />
+        </div>
       </section>
 
-      <section id="how-it-works" className="gsap-section max-w-7xl mx-auto px-6 py-24 text-white">
+      {/* ── HOW IT WORKS ─────────────────────────────────── */}
+      <section id="how-it-works" className="max-w-7xl mx-auto px-6 py-24 text-white">
         <div className="mb-14 max-w-3xl">
           <p className="text-sm uppercase tracking-[0.4em] text-orange-400 mb-3">{l.how.tag}</p>
-          <h2 className="text-5xl md:text-6xl font-black uppercase tracking-tight mb-4">{l.how.title}</h2>
-          <p className="text-sm text-white/70 leading-relaxed">{l.how.sub}</p>
+          <h2 id="how-title" className="text-5xl md:text-6xl font-black uppercase tracking-tight mb-4">{l.how.title}</h2>
+          <p id="how-sub" className="text-sm text-white/70 leading-relaxed">{l.how.sub}</p>
         </div>
         <div className="grid gap-6 md:grid-cols-3">
           {l.how.features.map((item, i) => (
-            <div key={i} className="gsap-card rounded-[2rem] border border-white/10 bg-white/5 p-8 transition hover:border-cyan-400/50 hover:bg-white/10">
+            <div key={i} className="how-card rounded-[2rem] border border-white/10 bg-white/5 p-8 transition hover:border-cyan-400/50 hover:bg-white/10">
               <p className="text-xs uppercase tracking-[0.4em] text-cyan-200 mb-4">{item.title}</p>
               <p className="text-sm text-white/70 leading-relaxed">{item.text}</p>
             </div>
@@ -296,14 +474,20 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="modules" className="gsap-section max-w-7xl mx-auto px-6 py-32 relative z-10 bg-black/90">
-        <div className="flex items-center gap-6 mb-20">
-          <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter">{l.modules.title}</h2>
+      {/* ── MODULES (horizontal scroll) ──────────────────── */}
+      <section id="modules-section" className="relative w-full bg-black overflow-hidden">
+        <div className="flex items-center gap-6 px-6 pt-24 pb-10 max-w-7xl mx-auto">
+          <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white">{l.modules.title}</h2>
           <div className="h-[2px] flex-1 bg-white/10" />
+          <span className="hidden md:block text-[10px] uppercase tracking-[0.4em] text-white/30">← scroll →</span>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+        <div
+          id="modules-track"
+          className="flex gap-8 pl-6 pr-24 pb-24 will-change-transform"
+          style={{ width: 'max-content' }}
+        >
           {l.modules.items.map((mod) => (
-            <div key={mod.id} className="gsap-card group relative">
+            <div key={mod.id} className="w-[340px] md:w-[380px] shrink-0 group relative">
               <div className="relative h-full bg-[#111] border border-white/5 border-t-4 border-t-transparent p-10 rounded-xl transition-all duration-300 transform hover:-translate-y-3 hover:scale-[1.02] hover:border-cyan-400/60 hover:bg-white/10 hover:shadow-[0_24px_60px_rgba(34,211,238,0.18)]">
                 <div className="flex justify-between items-start mb-12 gap-6">
                   <span className="font-mono text-xs text-white/30 uppercase tracking-[0.35em]">{mod.id}</span>
@@ -319,7 +503,8 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="gsap-section max-w-7xl mx-auto px-6 pb-24 relative z-10">
+      {/* ── INCLUDED ─────────────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-6 pb-24 relative z-10">
         <div className="rounded-[3rem] border border-white/10 bg-[#050b15]/80 p-10 md:p-14 shadow-[0_0_80px_rgba(0,0,0,0.28)] transition-all duration-500">
           <div className="grid gap-10 lg:grid-cols-[1.3fr_0.9fr]">
             <div>
@@ -329,7 +514,7 @@ export default function Home() {
             </div>
             <div className="grid gap-4">
               {l.included.items.map((item, i) => (
-                <div key={i} className="gsap-card group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-white/40 hover:shadow-[0_0_40px_rgba(255,255,255,0.1)] cursor-pointer">
+                <div key={i} className="included-card group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-white/40 hover:shadow-[0_0_40px_rgba(255,255,255,0.1)] cursor-pointer">
                   <div className="relative z-10">
                     <p className="text-[10px] font-black uppercase tracking-[0.4em] text-cyan-400 mb-2">{item.title}</p>
                     <p className="text-sm font-bold text-white mb-1">{item.sub}</p>
@@ -348,10 +533,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="testimonials" className="gsap-section max-w-7xl mx-auto px-6 pb-24 pt-12 relative z-10">
+      {/* ── TESTIMONIALS ─────────────────────────────────── */}
+      <section id="testimonials" className="max-w-7xl mx-auto px-6 pb-24 pt-12 relative z-10">
         <div className="rounded-[3rem] border border-white/10 bg-[#050b15]/80 p-10 md:p-14 shadow-[0_0_90px_rgba(0,0,0,0.28)] transition-all duration-500 hover:shadow-[0_0_110px_rgba(34,211,238,0.18)]">
           <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
-            <div>
+            <div id="review-left">
               <p className="text-sm uppercase tracking-[0.4em] text-cyan-300/80 mb-4">{l.reviews.tag}</p>
               <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-6">{l.reviews.title}</h2>
               <p className="max-w-xl text-sm text-white/70 leading-relaxed">{l.reviews.sub}</p>
@@ -361,43 +547,44 @@ export default function Home() {
                 ))}
               </div>
             </div>
-<div className="space-y-6">
-  {[
-    {
-      text: l.reviews.items[0].text,
-      author: lang === 'en' ? 'Mila West' : 'Мила Вест',
-      role: lang === 'en' ? 'Endurance Athlete' : 'Атлет на выносливость',
-      img: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face',
-    },
-    {
-      text: l.reviews.items[1].text,
-      author: lang === 'en' ? 'Alex Reed' : 'Алекс Рид',
-      role: lang === 'en' ? 'Running Coach' : 'Тренер по бегу',
-      img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face',
-    },
-  ].map((item, i) => (
-    <blockquote key={i} className="group rounded-3xl border border-white/10 bg-[#08131e]/90 p-8 text-white/80 shadow-[0_20px_60px_rgba(0,0,0,0.3)] transition-all duration-300 transform cursor-pointer hover:-translate-y-2 hover:shadow-[0_24px_80px_rgba(0,0,0,0.35)] hover:bg-white/10">
-      <div className="flex gap-1 mb-4">
-        {[...Array(5)].map((_, j) => (
-          <span key={j} className="text-orange-400 text-sm">★</span>
-        ))}
-      </div>
-      <p className="text-base font-semibold text-white group-hover:text-cyan-200 mb-6">{item.text}</p>
-      <div className="flex items-center gap-4">
-        <img src={item.img} alt={item.author} className="w-12 h-12 rounded-full object-cover border-2 border-white/20" />
-        <div>
-          <p className="text-sm font-bold text-white">{item.author}</p>
-          <p className="text-xs uppercase tracking-[0.3em] text-white/40">{item.role}</p>
-        </div>
-      </div>
-    </blockquote>
-  ))}
-</div>
+            <div id="review-right" className="space-y-6">
+              {[
+                {
+                  text: l.reviews.items[0].text,
+                  author: lang === 'en' ? 'Mila West' : 'Мила Вест',
+                  role: lang === 'en' ? 'Endurance Athlete' : 'Атлет на выносливость',
+                  img: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face',
+                },
+                {
+                  text: l.reviews.items[1].text,
+                  author: lang === 'en' ? 'Alex Reed' : 'Алекс Рид',
+                  role: lang === 'en' ? 'Running Coach' : 'Тренер по бегу',
+                  img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face',
+                },
+              ].map((item, i) => (
+                <blockquote key={i} className="group rounded-3xl border border-white/10 bg-[#08131e]/90 p-8 text-white/80 shadow-[0_20px_60px_rgba(0,0,0,0.3)] transition-all duration-300 transform cursor-pointer hover:-translate-y-2 hover:shadow-[0_24px_80px_rgba(0,0,0,0.35)] hover:bg-white/10">
+                  <div className="flex gap-1 mb-4">
+                    {[...Array(5)].map((_, j) => (
+                      <span key={j} className="text-orange-400 text-sm">★</span>
+                    ))}
+                  </div>
+                  <p className="text-base font-semibold text-white group-hover:text-cyan-200 mb-6">{item.text}</p>
+                  <div className="flex items-center gap-4">
+                    <img src={item.img} alt={item.author} className="w-12 h-12 rounded-full object-cover border-2 border-white/20" />
+                    <div>
+                      <p className="text-sm font-bold text-white">{item.author}</p>
+                      <p className="text-xs uppercase tracking-[0.3em] text-white/40">{item.role}</p>
+                    </div>
+                  </div>
+                </blockquote>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      <footer className="gsap-section max-w-7xl mx-auto px-6 py-20 text-white">
+      {/* ── FOOTER ───────────────────────────────────────── */}
+      <footer className="max-w-7xl mx-auto px-6 py-20 text-white">
         <div className="grid gap-10 lg:grid-cols-[1.25fr_0.75fr] border-t border-white/10 pt-10">
           <div>
             <p className="text-sm uppercase tracking-[0.35em] text-orange-400 mb-4">{l.footer.tag}</p>
@@ -426,7 +613,7 @@ export default function Home() {
         @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
         @keyframes pulseLine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
         @keyframes flowLine { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-        @keyframes speedNeedleSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes scrollHint { 0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.4; } 50% { transform: translateX(-50%) translateY(8px); opacity: 0.8; } }
         html { scroll-behavior: smooth; }
         body { background-color: #000000; background-image: none; margin: 0; padding: 0; overflow-x: hidden; }
       `}</style>
