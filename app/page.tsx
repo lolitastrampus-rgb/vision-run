@@ -35,20 +35,6 @@ const AnimatedText = ({ text, color, delay, visible }: {
   </span>
 );
 
-const useInView = (threshold = 0.15) => {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setInView(true); },
-      { threshold }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
-  return { ref, inView };
-};
-
 const t = {
   en: {
     nav: { how: 'How it works', modules: 'Modules', reviews: 'Reviews', cta: 'Start now' },
@@ -165,19 +151,48 @@ const t = {
 export default function Home() {
   const [lang, setLang] = useState<'en' | 'ru'>('en');
   const l = t[lang];
-
   const bgFilter = 'brightness(1.08) saturate(1.15) contrast(1.05)';
   const [titleVisible, setTitleVisible] = useState(false);
+
   useEffect(() => {
     const timer = setTimeout(() => setTitleVisible(true), 300);
     return () => clearTimeout(timer);
   }, []);
 
-  const { ref: howRef, inView: howInView } = useInView();
-  const { ref: modulesRef, inView: modulesInView } = useInView();
-  const { ref: includedRef, inView: includedInView } = useInView();
-  const { ref: reviewsRef, inView: reviewsInView } = useInView();
-  const { ref: footerRef, inView: footerInView } = useInView();
+  useEffect(() => {
+    let ScrollTriggerInstance: any;
+    const loadGSAP = async () => {
+      const { gsap } = await import('gsap');
+      const { ScrollTrigger } = await import('gsap/ScrollTrigger');
+      gsap.registerPlugin(ScrollTrigger);
+      ScrollTriggerInstance = ScrollTrigger;
+
+      gsap.utils.toArray('.gsap-section').forEach((el: any) => {
+        gsap.fromTo(el,
+          { opacity: 0, y: 60 },
+          {
+            opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' }
+          }
+        );
+      });
+
+      gsap.utils.toArray('.gsap-card').forEach((el: any) => {
+        gsap.fromTo(el,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1, y: 0, duration: 0.6, ease: 'power2.out',
+            scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none none' }
+          }
+        );
+      });
+    };
+
+    loadGSAP();
+    return () => {
+      if (ScrollTriggerInstance) ScrollTriggerInstance.getAll().forEach((t: any) => t.kill());
+    };
+  }, []);
 
   const bpm = useCountUp(168);
   const speed = useCountUp(18.5);
@@ -188,7 +203,6 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-black font-sans selection:bg-orange-600 overflow-x-hidden relative scroll-smooth text-white">
 
-      {/* HEADER */}
       <header className="absolute inset-x-0 top-0 z-20 bg-black/50 border-b border-white/10 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 text-white">
           <p className="text-xs uppercase tracking-[0.45em] text-white font-black transition-all duration-300 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] cursor-default">Vision Run</p>
@@ -198,10 +212,7 @@ export default function Home() {
             <a href="#testimonials" className="text-sm font-semibold leading-6 text-white/60 transition-all duration-300 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]">{l.nav.reviews}</a>
           </nav>
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => setLang(lang === 'en' ? 'ru' : 'en')}
-              className="text-xs font-black uppercase tracking-widest text-white/50 hover:text-white transition-all duration-300 border border-white/10 rounded-full px-3 py-1.5 hover:border-white/40"
-            >
+            <button onClick={() => setLang(lang === 'en' ? 'ru' : 'en')} className="text-xs font-black uppercase tracking-widest text-white/50 hover:text-white transition-all duration-300 border border-white/10 rounded-full px-3 py-1.5 hover:border-white/40">
               {lang === 'en' ? 'RU' : 'EN'}
             </button>
             <a href="#modules" className="inline-block rounded-full border border-white/20 bg-white/10 px-8 py-3 text-sm font-bold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black hover:shadow-[0_0_30px_rgba(255,255,255,0.8)] hover:scale-105">{l.nav.cta}</a>
@@ -209,7 +220,6 @@ export default function Home() {
         </div>
       </header>
 
-      {/* HERO */}
       <section className="relative h-screen w-full flex items-center justify-center px-4 pt-24">
         <div className="absolute inset-0 z-0 bg-no-repeat bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=2070&auto=format&fit=crop')", filter: bgFilter }} />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/75 z-[1]" />
@@ -227,10 +237,8 @@ export default function Home() {
               <p className="max-w-2xl text-sm text-white/60 mb-6 leading-relaxed">{l.hero.sub}</p>
               <div className="h-2 w-32 bg-white" />
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-              {/* BPM */}
-              <div className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-black/40 p-8 shadow-[inset_0_0_45px_rgba(255,255,255,0.05),0_24px_80px_rgba(0,0,0,0.35)] transition-all duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-red-400/50 hover:bg-red-950/20">
+              <div className="gsap-card group relative overflow-hidden rounded-[2rem] border border-white/10 bg-black/40 p-8 shadow-[inset_0_0_45px_rgba(255,255,255,0.05),0_24px_80px_rgba(0,0,0,0.35)] transition-all duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-red-400/50 hover:bg-red-950/20">
                 <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-red-500/70 via-transparent to-red-500/70 opacity-80 animate-[pulseLine_2.4s_linear_infinite]" />
                 <p className="relative text-[10px] font-black text-red-300 uppercase tracking-widest mb-3">{l.hud.bpm}</p>
                 <div className="relative flex items-baseline gap-3">
@@ -239,8 +247,7 @@ export default function Home() {
                 </div>
                 <p className="text-[10px] font-mono text-white/40 mt-4 uppercase tracking-[0.3em]">{l.hud.bpmAnnot}</p>
               </div>
-              {/* KMH */}
-              <div className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-black/35 p-8 shadow-[inset_0_0_30px_rgba(56,189,248,0.08),0_24px_80px_rgba(0,0,0,0.32)] transition-all duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-cyan-400/60 hover:bg-cyan-950/15">
+              <div className="gsap-card group relative overflow-hidden rounded-[2rem] border border-white/10 bg-black/35 p-8 shadow-[inset_0_0_30px_rgba(56,189,248,0.08),0_24px_80px_rgba(0,0,0,0.32)] transition-all duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-cyan-400/60 hover:bg-cyan-950/15">
                 <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-cyan-400/60 via-transparent to-cyan-400/60 opacity-70 animate-[flowLine_3s_linear_infinite]" />
                 <p className="relative text-[10px] font-black text-cyan-300 uppercase tracking-widest mb-3">{l.hud.kmh}</p>
                 <div className="relative flex items-baseline gap-3">
@@ -256,8 +263,7 @@ export default function Home() {
                 </div>
                 <p className="text-[10px] font-mono text-white/40 mt-4 uppercase tracking-[0.3em]">{l.hud.kmhAnnot}</p>
               </div>
-              {/* ENERGY */}
-              <div className="group relative overflow-hidden rounded-[2rem] border border-white/10 bg-black/30 p-8 shadow-[inset_0_0_30px_rgba(16,185,129,0.08),0_24px_80px_rgba(0,0,0,0.28)] transition-all duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-emerald-400/60 hover:bg-emerald-950/15">
+              <div className="gsap-card group relative overflow-hidden rounded-[2rem] border border-white/10 bg-black/30 p-8 shadow-[inset_0_0_30px_rgba(16,185,129,0.08),0_24px_80px_rgba(0,0,0,0.28)] transition-all duration-500 hover:-translate-y-3 hover:scale-[1.03] hover:border-emerald-400/60 hover:bg-emerald-950/15">
                 <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-emerald-400/60 via-transparent to-emerald-400/60 opacity-70 animate-[flowLine_3.4s_linear_infinite]" />
                 <p className="relative text-[10px] font-black text-emerald-300 uppercase tracking-widest mb-3">{l.hud.charge}</p>
                 <div className="relative flex items-center gap-4">
@@ -274,8 +280,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* HOW IT WORKS */}
-      <section id="how-it-works" ref={howRef as React.RefObject<HTMLElement>} className={`max-w-7xl mx-auto px-6 py-24 text-white transition-all duration-700 opacity-100 translate-y-0`}>
+      <section id="how-it-works" className="gsap-section max-w-7xl mx-auto px-6 py-24 text-white">
         <div className="mb-14 max-w-3xl">
           <p className="text-sm uppercase tracking-[0.4em] text-orange-400 mb-3">{l.how.tag}</p>
           <h2 className="text-5xl md:text-6xl font-black uppercase tracking-tight mb-4">{l.how.title}</h2>
@@ -283,7 +288,7 @@ export default function Home() {
         </div>
         <div className="grid gap-6 md:grid-cols-3">
           {l.how.features.map((item, i) => (
-            <div key={i} className="rounded-[2rem] border border-white/10 bg-white/5 p-8 transition hover:border-cyan-400/50 hover:bg-white/10">
+            <div key={i} className="gsap-card rounded-[2rem] border border-white/10 bg-white/5 p-8 transition hover:border-cyan-400/50 hover:bg-white/10">
               <p className="text-xs uppercase tracking-[0.4em] text-cyan-200 mb-4">{item.title}</p>
               <p className="text-sm text-white/70 leading-relaxed">{item.text}</p>
             </div>
@@ -291,15 +296,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* MODULES */}
-      <section id="modules" ref={modulesRef as React.RefObject<HTMLElement>} className={`max-w-7xl mx-auto px-6 py-32 relative z-10 bg-black/90 transition-all duration-700 opacity-100 translate-y-0`}>
+      <section id="modules" className="gsap-section max-w-7xl mx-auto px-6 py-32 relative z-10 bg-black/90">
         <div className="flex items-center gap-6 mb-20">
           <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter">{l.modules.title}</h2>
           <div className="h-[2px] flex-1 bg-white/10" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {l.modules.items.map((mod) => (
-            <div key={mod.id} className="group relative">
+            <div key={mod.id} className="gsap-card group relative">
               <div className="relative h-full bg-[#111] border border-white/5 border-t-4 border-t-transparent p-10 rounded-xl transition-all duration-300 transform hover:-translate-y-3 hover:scale-[1.02] hover:border-cyan-400/60 hover:bg-white/10 hover:shadow-[0_24px_60px_rgba(34,211,238,0.18)]">
                 <div className="flex justify-between items-start mb-12 gap-6">
                   <span className="font-mono text-xs text-white/30 uppercase tracking-[0.35em]">{mod.id}</span>
@@ -315,8 +319,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* INCLUDED */}
-      <section ref={includedRef as React.RefObject<HTMLElement>} className={`max-w-7xl mx-auto px-6 pb-24 relative z-10 transition-all duration-700 opacity-100 translate-y-0`}>
+      <section className="gsap-section max-w-7xl mx-auto px-6 pb-24 relative z-10">
         <div className="rounded-[3rem] border border-white/10 bg-[#050b15]/80 p-10 md:p-14 shadow-[0_0_80px_rgba(0,0,0,0.28)] transition-all duration-500">
           <div className="grid gap-10 lg:grid-cols-[1.3fr_0.9fr]">
             <div>
@@ -326,7 +329,7 @@ export default function Home() {
             </div>
             <div className="grid gap-4">
               {l.included.items.map((item, i) => (
-                <div key={i} className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-white/40 hover:shadow-[0_0_40px_rgba(255,255,255,0.1)] cursor-pointer">
+                <div key={i} className="gsap-card group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl transition-all duration-500 hover:-translate-y-1 hover:border-white/40 hover:shadow-[0_0_40px_rgba(255,255,255,0.1)] cursor-pointer">
                   <div className="relative z-10">
                     <p className="text-[10px] font-black uppercase tracking-[0.4em] text-cyan-400 mb-2">{item.title}</p>
                     <p className="text-sm font-bold text-white mb-1">{item.sub}</p>
@@ -345,8 +348,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* REVIEWS */}
-      <section id="testimonials" ref={reviewsRef as React.RefObject<HTMLElement>} className={`max-w-7xl mx-auto px-6 pb-24 pt-12 relative z-10 transition-all duration-700 opacity-100 translate-y-0`}>
+      <section id="testimonials" className="gsap-section max-w-7xl mx-auto px-6 pb-24 pt-12 relative z-10">
         <div className="rounded-[3rem] border border-white/10 bg-[#050b15]/80 p-10 md:p-14 shadow-[0_0_90px_rgba(0,0,0,0.28)] transition-all duration-500 hover:shadow-[0_0_110px_rgba(34,211,238,0.18)]">
           <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
             <div>
@@ -361,7 +363,7 @@ export default function Home() {
             </div>
             <div className="space-y-6">
               {l.reviews.items.map((item, i) => (
-                <blockquote key={i} className="group rounded-3xl border border-white/10 bg-[#08131e]/90 p-8 text-white/80 shadow-[0_20px_60px_rgba(0,0,0,0.3)] transition-all duration-300 transform cursor-pointer hover:-translate-y-2 hover:shadow-[0_24px_80px_rgba(0,0,0,0.35)] hover:bg-white/10">
+                <blockquote key={i} className="gsap-card group rounded-3xl border border-white/10 bg-[#08131e]/90 p-8 text-white/80 shadow-[0_20px_60px_rgba(0,0,0,0.3)] transition-all duration-300 transform cursor-pointer hover:-translate-y-2 hover:shadow-[0_24px_80px_rgba(0,0,0,0.35)] hover:bg-white/10">
                   <p className="text-lg font-semibold text-white group-hover:text-cyan-200">{item.text}</p>
                   <footer className="mt-6 text-sm uppercase tracking-[0.35em] text-white/50 group-hover:text-white/70">{item.author}</footer>
                 </blockquote>
@@ -371,8 +373,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer ref={footerRef as React.RefObject<HTMLElement>} className={`max-w-7xl mx-auto px-6 py-20 text-white transition-all duration-700 opacity-100 translate-y-0`}>
+      <footer className="gsap-section max-w-7xl mx-auto px-6 py-20 text-white">
         <div className="grid gap-10 lg:grid-cols-[1.25fr_0.75fr] border-t border-white/10 pt-10">
           <div>
             <p className="text-sm uppercase tracking-[0.35em] text-orange-400 mb-4">{l.footer.tag}</p>
