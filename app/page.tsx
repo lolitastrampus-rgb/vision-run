@@ -222,7 +222,7 @@ export default function Home() {
 
       <section className="relative h-screen w-full flex items-center justify-center px-4 pt-24">
         <div className="absolute inset-0 z-0 bg-no-repeat bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=2070&auto=format&fit=crop')", filter: bgFilter }} />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/75 z-[1]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/85 z-[1]" />
         <div className="relative z-10 w-full max-w-5xl">
           <div className="border-l-4 border-orange-600 pl-8 md:pl-12 animate-[fadeIn_1s_ease-out]">
             <div className="mb-12">
