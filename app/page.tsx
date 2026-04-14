@@ -361,14 +361,38 @@ export default function Home() {
                 ))}
               </div>
             </div>
-            <div className="space-y-6">
-              {l.reviews.items.map((item, i) => (
-                <blockquote key={i} className="gsap-card group rounded-3xl border border-white/10 bg-[#08131e]/90 p-8 text-white/80 shadow-[0_20px_60px_rgba(0,0,0,0.3)] transition-all duration-300 transform cursor-pointer hover:-translate-y-2 hover:shadow-[0_24px_80px_rgba(0,0,0,0.35)] hover:bg-white/10">
-                  <p className="text-lg font-semibold text-white group-hover:text-cyan-200">{item.text}</p>
-                  <footer className="mt-6 text-sm uppercase tracking-[0.35em] text-white/50 group-hover:text-white/70">{item.author}</footer>
-                </blockquote>
-              ))}
-            </div>
+<div className="space-y-6">
+  {[
+    {
+      text: l.reviews.items[0].text,
+      author: lang === 'en' ? 'Mila West' : 'Мила Вест',
+      role: lang === 'en' ? 'Endurance Athlete' : 'Атлет на выносливость',
+      img: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face',
+    },
+    {
+      text: l.reviews.items[1].text,
+      author: lang === 'en' ? 'Alex Reed' : 'Алекс Рид',
+      role: lang === 'en' ? 'Running Coach' : 'Тренер по бегу',
+      img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face',
+    },
+  ].map((item, i) => (
+    <blockquote key={i} className="group rounded-3xl border border-white/10 bg-[#08131e]/90 p-8 text-white/80 shadow-[0_20px_60px_rgba(0,0,0,0.3)] transition-all duration-300 transform cursor-pointer hover:-translate-y-2 hover:shadow-[0_24px_80px_rgba(0,0,0,0.35)] hover:bg-white/10">
+      <div className="flex gap-1 mb-4">
+        {[...Array(5)].map((_, j) => (
+          <span key={j} className="text-orange-400 text-sm">★</span>
+        ))}
+      </div>
+      <p className="text-base font-semibold text-white group-hover:text-cyan-200 mb-6">{item.text}</p>
+      <div className="flex items-center gap-4">
+        <img src={item.img} alt={item.author} className="w-12 h-12 rounded-full object-cover border-2 border-white/20" />
+        <div>
+          <p className="text-sm font-bold text-white">{item.author}</p>
+          <p className="text-xs uppercase tracking-[0.3em] text-white/40">{item.role}</p>
+        </div>
+      </div>
+    </blockquote>
+  ))}
+</div>
           </div>
         </div>
       </section>
