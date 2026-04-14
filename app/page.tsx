@@ -79,6 +79,12 @@ const t = {
         { text: '"Finally a headset that understands running. Every mile feels guided and intentionally built."', author: '— Alex Reed, coach' },
       ],
     },
+    cta: {
+      tag: 'Get started today',
+      title: 'Ready to run\nbeyond reality?',
+      sub: 'Our team is here to help you unlock the full potential of Vision Run AR training. Reach out or start your free session now.',
+      btn1: 'Contact Sales', btn2: 'Start Free',
+    },
     footer: {
       tag: 'Vision Run', title: 'Designed for runners who want every run to count.',
       sub: 'Real-time data, adaptive training and body awareness — without the noise.',
@@ -169,6 +175,12 @@ const t = {
         { text: '"VR-линзы превратили каждую пробежку в сессию про-уровня. Данные, маршрут и фокус — всё в одном."', author: '— Мила Вест, атлет' },
         { text: '"Наконец гарнитура, которая понимает бег. Каждая миля ощущается осознанной и выверенной."', author: '— Алекс Рид, тренер' },
       ],
+    },
+    cta: {
+      tag: 'Начни сегодня',
+      title: 'Готов бежать\nза горизонт?',
+      sub: 'Наша команда поможет раскрыть весь потенциал AR-тренировок Vision Run. Свяжись с нами или начни бесплатно прямо сейчас.',
+      btn1: 'Связаться', btn2: 'Начать бесплатно',
     },
     footer: {
       tag: 'Vision Run', title: 'Создано для бегунов, которым важна каждая пробежка.',
@@ -474,6 +486,18 @@ export default function Home() {
       // ── Testimonials ──────────────────────────────────────────────────────
       gsap.fromTo('#review-left',  { x: -50, opacity: 0 }, { x: 0, opacity: 1, ease: 'power2.out', scrollTrigger: { trigger: '#testimonials', start: 'top 80%', end: 'top 50%', scrub: 0.6 } });
       gsap.fromTo('#review-right', { x:  50, opacity: 0 }, { x: 0, opacity: 1, ease: 'power2.out', scrollTrigger: { trigger: '#testimonials', start: 'top 75%', end: 'top 40%', scrub: 0.7 } });
+
+      // ── CTA banner ────────────────────────────────────────────────────────
+      gsap.fromTo('#cta-banner',
+        { opacity: 0, y: 60 },
+        { opacity: 1, y: 0, ease: 'power3.out',
+          scrollTrigger: { trigger: '#cta-banner', start: 'top 85%', end: 'top 50%', scrub: 0.7 } },
+      );
+      gsap.fromTo('#cta-img',
+        { scale: 1.08, opacity: 0 },
+        { scale: 1, opacity: 1, ease: 'power2.out',
+          scrollTrigger: { trigger: '#cta-banner', start: 'top 80%', end: 'top 40%', scrub: 0.9 } },
+      );
 
       // ── Footer ────────────────────────────────────────────────────────────
       gsap.fromTo('footer', { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: 'power2.out', scrollTrigger: { trigger: 'footer', start: 'top 90%', end: 'top 60%', scrub: 0.6 } });
@@ -1035,6 +1059,79 @@ export default function Home() {
                 </blockquote>
               ))}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA BANNER ────────────────────────────────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-6 pb-24 pt-4">
+        <div
+          id="cta-banner"
+          className="relative overflow-hidden rounded-[2.5rem] border border-white/[0.07] bg-white/[0.02]"
+        >
+          {/* Subtle orange glow bottom-left */}
+          <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_55%_70%_at_0%_100%,rgba(249,115,22,0.09),transparent)]" />
+          {/* Top accent line */}
+          <div className="absolute inset-x-0 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
+
+          <div className="relative grid md:grid-cols-[1fr_auto] items-stretch">
+
+            {/* Left — text + buttons */}
+            <div className="px-10 py-14 md:px-16 md:py-20 flex flex-col justify-center">
+              <p className="text-[9px] uppercase tracking-[0.55em] text-orange-500 mb-6">{l.cta.tag}</p>
+
+              <h2
+                className="font-black italic uppercase tracking-tighter text-white leading-[0.88] mb-7"
+                style={{ fontSize: 'clamp(2.8rem, 6vw, 5.5rem)' }}
+              >
+                {l.cta.title.split('\n').map((line, i) => (
+                  <span key={i}>{i > 0 && <br />}{i === 1 ? <span className="text-orange-500">{line}</span> : line}</span>
+                ))}
+              </h2>
+
+              <p className="max-w-md text-sm text-white/40 leading-relaxed mb-10">
+                {l.cta.sub}
+              </p>
+
+              <div className="flex flex-wrap gap-4">
+                <button className="px-9 py-4 bg-white text-black font-black uppercase text-[10px] tracking-[0.4em] rounded-full hover:bg-orange-500 hover:text-white transition-all duration-200 active:scale-[0.97]">
+                  {l.cta.btn1}
+                </button>
+                <a href="#modules-section" className="px-9 py-4 border border-white/[0.15] text-white/60 font-black uppercase text-[10px] tracking-[0.4em] rounded-full hover:border-white/40 hover:text-white transition-all duration-200">
+                  {l.cta.btn2} →
+                </a>
+              </div>
+            </div>
+
+            {/* Right — runner photo with orange overlay */}
+            <div
+              id="cta-img"
+              className="hidden md:block relative w-[340px] lg:w-[420px] shrink-0 overflow-hidden"
+            >
+              {/* Orange tint block behind image */}
+              <div className="absolute inset-0 bg-orange-500/90" />
+              <img
+                src="https://images.unsplash.com/photo-1571008887538-b36bb32f4571?q=80&w=800&auto=format&fit=crop"
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover mix-blend-luminosity opacity-60"
+                draggable={false}
+              />
+              {/* Left fade into card body */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#111]/80 via-transparent to-transparent" />
+              {/* Bottom fade */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+
+              {/* Floating stat badge */}
+              <div className="absolute bottom-8 left-8 right-8 rounded-2xl border border-white/20 bg-black/50 backdrop-blur-sm px-5 py-4">
+                <p className="text-[8px] uppercase tracking-[0.45em] text-white/40 mb-1">Current session</p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-3xl font-black italic text-white">18.5</span>
+                  <span className="text-[10px] text-orange-400 uppercase tracking-[0.3em]">km/h</span>
+                  <span className="ml-auto text-[10px] font-mono text-emerald-400">● LIVE</span>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
