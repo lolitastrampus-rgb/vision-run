@@ -126,7 +126,7 @@ function VisionShowcase({ lang }: { lang: 'en' | 'ru' }) {
 
   const ConfigTag = ({ label, active, onClick }: { label:string; active:boolean; onClick:()=>void }) => (
     <button onClick={onClick}
-      className="px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.3em] border transition-all duration-200 cursor-pointer"
+      className="px-3 py-1.5 rounded-full text-[11px] font-black uppercase tracking-[0.3em] border transition-all duration-200 cursor-pointer"
       style={{
         borderColor: active ? accent : 'rgba(255,255,255,0.1)',
         background:  active ? `${accent}20` : 'transparent',
@@ -145,10 +145,10 @@ function VisionShowcase({ lang }: { lang: 'en' | 'ru' }) {
       <div className="max-w-7xl mx-auto px-6 lg:pl-16">
         {/* Header */}
         <div className="mb-14">
-          <p className="text-[9px] uppercase tracking-[0.55em] text-orange-500 mb-4">{lang==='ru'?'Флагманский продукт':'Flagship Product'}</p>
+          <p className="text-[11px] uppercase tracking-[0.55em] text-orange-500 mb-4">{lang==='ru'?'Флагманский продукт':'Flagship Product'}</p>
           <div className="flex flex-col md:flex-row md:items-end gap-4 md:gap-12">
-            <h2 className="blur-reveal text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white leading-none">{lang==='ru'?'Vision Showcase.':'Vision Showcase.'}</h2>
-            <p className="text-sm text-white/35 max-w-xs leading-relaxed md:pb-1">{lang==='ru'?'Выбери модель, настрой линзу, оправу и HUD-интерфейс.':'Select your model, configure lens, frame and HUD interface.'}</p>
+            <h2 className="blur-reveal text-5xl md:text-7xl font-display font-black italic uppercase tracking-tighter text-white leading-none">{lang==='ru'?'Vision Showcase.':'Vision Showcase.'}</h2>
+            <p className="text-sm text-white/60 max-w-xs leading-relaxed md:pb-1">{lang==='ru'?'Выбери модель, настрой линзу, оправу и HUD-интерфейс.':'Select your model, configure lens, frame and HUD interface.'}</p>
           </div>
         </div>
 
@@ -162,7 +162,7 @@ function VisionShowcase({ lang }: { lang: 'en' | 'ru' }) {
             <div className="flex gap-2 mb-10">
               {SHOWCASE_MODELS.map((m,i) => (
                 <button key={m.id} onClick={() => { setDir(i>idx?1:-1); setIdx(i); }}
-                  className="relative px-3 py-1.5 rounded-full border text-[8px] font-black uppercase tracking-[0.3em] transition-all duration-200"
+                  className="relative px-3 py-1.5 rounded-full border text-[11px] font-black uppercase tracking-[0.3em] transition-all duration-200"
                   style={{
                     borderColor: i===idx ? m.accent : 'rgba(255,255,255,0.08)',
                     color:       i===idx ? m.accent : 'rgba(255,255,255,0.28)',
@@ -229,12 +229,12 @@ function VisionShowcase({ lang }: { lang: 'en' | 'ru' }) {
                 transition={{ type:'spring', stiffness:340, damping:28 }}
                 className="mt-8 text-center">
                 <div className="flex items-center justify-center gap-3 mb-2">
-                  <span className="text-[8px] font-mono uppercase tracking-[0.5em]" style={{ color:accent }}>{model.tag}</span>
+                  <span className="text-[11px] font-mono uppercase tracking-[0.5em]" style={{ color:accent }}>{model.tag}</span>
                   <span className="w-px h-3 bg-white/20" />
-                  <span className="text-[8px] font-mono uppercase tracking-[0.4em] text-white/30">${model.price} / mo</span>
+                  <span className="text-[11px] font-mono uppercase tracking-[0.4em] text-white/50">${model.price} / mo</span>
                 </div>
-                <h3 className="text-2xl md:text-3xl font-black italic uppercase tracking-tight text-white mb-2">{model.name}</h3>
-                <p className="text-sm text-white/35 max-w-sm mx-auto leading-relaxed">{lang==='ru'?model.descRu:model.desc}</p>
+                <h3 className="text-2xl md:text-3xl font-display font-black italic uppercase tracking-tight text-white mb-2">{model.name}</h3>
+                <p className="text-sm text-white/60 max-w-sm mx-auto leading-relaxed">{lang==='ru'?model.descRu:model.desc}</p>
               </motion.div>
             </AnimatePresence>
 
@@ -259,7 +259,7 @@ function VisionShowcase({ lang }: { lang: 'en' | 'ru' }) {
               </div>
               <div>
                 <p className="text-sm font-black text-white">{lang==='ru'?'Настроить':'Customize'}</p>
-                <p className="text-[9px] uppercase tracking-[0.3em] text-white/30">{lang==='ru'?'Параметры очков':'Lens parameters'}</p>
+                <p className="text-[11px] uppercase tracking-[0.3em] text-white/50">{lang==='ru'?'Параметры очков':'Lens parameters'}</p>
               </div>
             </div>
 
@@ -267,7 +267,7 @@ function VisionShowcase({ lang }: { lang: 'en' | 'ru' }) {
 
             {/* HUD Interface */}
             <div>
-              <p className="text-[9px] uppercase tracking-[0.45em] text-white/30 mb-3">{lang==='ru'?'HUD-интерфейс':'HUD Interface'}</p>
+              <p className="text-[11px] uppercase tracking-[0.45em] text-white/50 mb-3">{lang==='ru'?'HUD-интерфейс':'HUD Interface'}</p>
               <div className="flex flex-wrap gap-2">
                 {(['minimal','sport','tech'] as const).map(opt => (
                   <ConfigTag key={opt} label={opt} active={hud===opt} onClick={()=>setHud(opt)} />
@@ -277,7 +277,7 @@ function VisionShowcase({ lang }: { lang: 'en' | 'ru' }) {
 
             {/* Lens Tint */}
             <div>
-              <p className="text-[9px] uppercase tracking-[0.45em] text-white/30 mb-3">{lang==='ru'?'Тонировка линз':'Lens Tint'}</p>
+              <p className="text-[11px] uppercase tracking-[0.45em] text-white/50 mb-3">{lang==='ru'?'Тонировка линз':'Lens Tint'}</p>
               <div className="flex flex-wrap gap-2">
                 {['Clear','Dark','Photochromic'].map(opt => (
                   <ConfigTag key={opt} label={opt} active={tint===opt} onClick={()=>setTint(opt)} />
@@ -287,7 +287,7 @@ function VisionShowcase({ lang }: { lang: 'en' | 'ru' }) {
 
             {/* Frame Color */}
             <div>
-              <p className="text-[9px] uppercase tracking-[0.45em] text-white/30 mb-3">{lang==='ru'?'Цвет оправы':'Frame Color'}</p>
+              <p className="text-[11px] uppercase tracking-[0.45em] text-white/50 mb-3">{lang==='ru'?'Цвет оправы':'Frame Color'}</p>
               <div className="flex flex-col gap-2">
                 {Object.keys(FRAME_STROKES).map(opt => {
                   const swatch = opt==='Carbon'?'rgba(80,80,80,0.9)': opt==='Ghost White'?'rgba(220,220,220,0.9)':'#f97316';
@@ -296,7 +296,7 @@ function VisionShowcase({ lang }: { lang: 'en' | 'ru' }) {
                       className="flex items-center gap-3 px-3 py-2.5 rounded-xl border transition-all duration-200 text-left"
                       style={{ borderColor: frame===opt?accent:'rgba(255,255,255,0.07)', background: frame===opt?`${accent}10`:'transparent' }}>
                       <span className="w-4 h-4 rounded-full shrink-0 border border-white/20" style={{ background:swatch }} />
-                      <span className="text-[10px] font-black uppercase tracking-[0.3em]" style={{ color: frame===opt?accent:'rgba(255,255,255,0.45)' }}>{opt}</span>
+                      <span className="text-xs font-black uppercase tracking-[0.3em]" style={{ color: frame===opt?accent:'rgba(255,255,255,0.45)' }}>{opt}</span>
                       {frame===opt && <span className="ml-auto w-1.5 h-1.5 rounded-full" style={{ background:accent }} />}
                     </button>
                   );
@@ -308,11 +308,11 @@ function VisionShowcase({ lang }: { lang: 'en' | 'ru' }) {
 
             {/* CTA */}
             <div className="flex flex-col gap-2">
-              <button className="w-full py-3.5 rounded-2xl font-black uppercase text-[10px] tracking-[0.4em] transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
+              <button className="w-full py-3.5 rounded-2xl font-black uppercase text-xs tracking-[0.4em] transition-all duration-200 hover:opacity-90 active:scale-[0.98]"
                 style={{ background:accent, color: frame==='Ghost White'?'#000':'#000' }}>
                 {lang==='ru'?'Заказать модель':'Order This Model'}
               </button>
-              <button className="w-full py-3 rounded-2xl font-black uppercase text-[10px] tracking-[0.4em] border border-white/[0.1] text-white/40 hover:border-white/25 hover:text-white/70 transition-all duration-200">
+              <button className="w-full py-3 rounded-2xl font-black uppercase text-xs tracking-[0.4em] border border-white/[0.1] text-white/40 hover:border-white/25 hover:text-white/70 transition-all duration-200">
                 {lang==='ru'?'Подробнее':'Learn More'}
               </button>
             </div>
@@ -332,13 +332,13 @@ function VisionConfigurator({ lang }: { lang: 'en' | 'ru' }) {
     <section data-layer="true" className="relative max-w-7xl mx-auto px-6 py-24">
       {/* Header */}
       <div className="mb-16 text-center">
-        <p className="text-[9px] uppercase tracking-[0.55em] text-orange-500 mb-4">
+        <p className="text-[11px] uppercase tracking-[0.55em] text-orange-500 mb-4">
           {lang === 'ru' ? 'Интерактивный конфигуратор' : 'Interactive Configurator'}
         </p>
-        <h2 className="blur-reveal text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white leading-none">
+        <h2 className="blur-reveal text-5xl md:text-7xl font-display font-black italic uppercase tracking-tighter text-white leading-none">
           Vision Mode.
         </h2>
-        <p className="mt-5 text-sm text-white/35 max-w-sm mx-auto leading-relaxed">
+        <p className="mt-5 text-sm text-white/60 max-w-sm mx-auto leading-relaxed">
           {lang === 'ru' ? 'Выбери режим — линзы адаптируются мгновенно.' : 'Pick your mode — lenses adapt in real time.'}
         </p>
       </div>
@@ -377,12 +377,12 @@ function VisionConfigurator({ lang }: { lang: 'en' | 'ru' }) {
                     {m.icon}
                   </span>
                   <div>
-                    <span className="block text-[10px] font-black uppercase tracking-[0.35em] text-white">{m.label}</span>
+                    <span className="block text-xs font-black uppercase tracking-[0.35em] text-white">{m.label}</span>
                     {isActive && (
                       <motion.span
                         initial={{ opacity: 0, y: 4 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="block text-[9px] mt-0.5 font-mono uppercase tracking-[0.25em]"
+                        className="block text-[11px] mt-0.5 font-mono uppercase tracking-[0.25em]"
                         style={{ color: m.accent }}
                       >
                         {lang === 'ru' ? 'Активен' : 'Active'}
@@ -405,7 +405,7 @@ function VisionConfigurator({ lang }: { lang: 'en' | 'ru' }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 6 }}
               transition={{ duration: 0.25 }}
-              className="flex items-center gap-2 px-4 py-1.5 rounded-full border text-[9px] font-black uppercase tracking-[0.4em]"
+              className="flex items-center gap-2 px-4 py-1.5 rounded-full border text-[11px] font-black uppercase tracking-[0.4em]"
               style={{ borderColor: `${mode.accent}45`, color: mode.accent, background: `${mode.accent}10` }}
             >
               <span style={{ color: mode.accent }}>{mode.icon}</span>
@@ -457,7 +457,7 @@ function VisionConfigurator({ lang }: { lang: 'en' | 'ru' }) {
               className="w-1.5 h-1.5 rounded-full"
               style={{ background: mode.accent }}
             />
-            <span className="text-[9px] uppercase tracking-[0.3em] text-white/50 font-mono">
+            <span className="text-[11px] uppercase tracking-[0.3em] text-white/50 font-mono">
               {lang === 'ru' ? mode.statRu : mode.stat}
             </span>
           </motion.div>
@@ -495,10 +495,10 @@ function VisionConfigurator({ lang }: { lang: 'en' | 'ru' }) {
               {/* Bottom info */}
               <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
                 <div>
-                  <p className="text-[8px] uppercase tracking-[0.45em] font-mono mb-0.5" style={{ color: mode.accent }}>{lang === 'ru' ? 'Режим' : 'Lens Mode'}</p>
-                  <p className="text-sm font-black italic uppercase tracking-tight text-white">{mode.label}</p>
+                  <p className="text-[11px] uppercase tracking-[0.45em] font-mono mb-0.5" style={{ color: mode.accent }}>{lang === 'ru' ? 'Режим' : 'Lens Mode'}</p>
+                  <p className="text-sm font-display font-black italic uppercase tracking-tight text-white">{mode.label}</p>
                 </div>
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[8px] font-mono border"
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono border"
                   style={{ borderColor: `${mode.accent}45`, color: mode.accent, background: `${mode.accent}12` }}>
                   <motion.span animate={{ opacity: [1, 0.2, 1] }} transition={{ duration: 1.2, repeat: Infinity }} className="w-1 h-1 rounded-full" style={{ background: mode.accent }} />
                   {lang === 'ru' ? 'Активен' : 'Active'}
@@ -518,13 +518,13 @@ function VisionConfigurator({ lang }: { lang: 'en' | 'ru' }) {
               className="rounded-2xl border border-white/[0.07] p-5"
               style={{ background: 'rgba(255,255,255,0.018)' }}
             >
-              <p className="text-[10px] text-white/35 leading-relaxed mb-4">
+              <p className="text-xs text-white/60 leading-relaxed mb-4">
                 {lang === 'ru' ? mode.descRu : mode.desc}
               </p>
               <div className="h-px mb-3" style={{ background: `linear-gradient(90deg, ${mode.accent}35, transparent)` }} />
               <div className="flex items-center gap-2">
                 <motion.span animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.8, repeat: Infinity }} className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: mode.accent }} />
-                <span className="text-[9px] uppercase tracking-[0.35em] text-white/25 font-mono">
+                <span className="text-[11px] uppercase tracking-[0.35em] text-white/45 font-mono">
                   {lang === 'ru' ? mode.statRu : mode.stat}
                 </span>
               </div>
@@ -612,12 +612,12 @@ function Preloader({ visible }: { visible: boolean }) {
             transition={{ delay: 0.3, duration: 0.5, ease: 'easeOut' }}
             className="mt-9 text-center"
           >
-            <p className="text-[10px] font-black uppercase tracking-[0.7em] text-white mb-2">Vision Run</p>
+            <p className="text-xs font-black uppercase tracking-[0.7em] text-white mb-2">Vision Run</p>
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.55 }}
-              className="text-[8px] uppercase tracking-[0.5em] text-white/25"
+              className="text-[11px] uppercase tracking-[0.5em] text-white/45"
             >
               AR Running
             </motion.p>
@@ -1127,7 +1127,7 @@ export default function Home() {
                     onMouseLeave={() => setOpenNav(null)}>
                     {/* Nav trigger */}
                     <a href={item.href}
-                      className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.4em] transition-colors duration-200"
+                      className="flex items-center gap-1.5 text-xs font-black uppercase tracking-[0.4em] transition-colors duration-200"
                       style={{ color: openNav === item.href ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.38)' }}>
                       {item.label}
                       <motion.svg
@@ -1152,7 +1152,7 @@ export default function Home() {
                           <div className="h-[1.5px] bg-gradient-to-r from-transparent via-orange-500/60 to-transparent" />
                           {/* Header */}
                           <div className="px-4 py-3 border-b border-white/[0.06]">
-                            <p className="text-[8px] uppercase tracking-[0.55em] text-white/25 font-black">{item.label}</p>
+                            <p className="text-[11px] uppercase tracking-[0.55em] text-white/45 font-black">{item.label}</p>
                           </div>
                           {/* Links */}
                           {item.links.map(([label, href], i) => (
@@ -1175,13 +1175,13 @@ export default function Home() {
               {/* Right actions */}
               <div className="flex items-center gap-4">
                 <button onClick={() => setLang(lang === 'en' ? 'ru' : 'en')}
-                  className="text-[10px] font-black uppercase tracking-widest text-white/30 hover:text-white transition-colors">
+                  className="text-xs font-black uppercase tracking-widest text-white/50 hover:text-white transition-colors">
                   {lang === 'en' ? 'RU' : 'EN'}
                 </button>
                 <motion.a href="#modules-section"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
-                  className="group relative overflow-hidden flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/[0.18] text-[9px] font-black uppercase tracking-[0.4em] text-white/65 transition-colors duration-250 hover:border-white/50 hover:text-white">
+                  className="group relative overflow-hidden flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/[0.18] text-[11px] font-black uppercase tracking-[0.4em] text-white/65 transition-colors duration-250 hover:border-white/50 hover:text-white">
                   <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-[0.06] transition-opacity duration-250" />
                   {l.nav.cta}
                   <svg className="-translate-x-0.5 group-hover:translate-x-0.5 transition-transform duration-200" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -1217,11 +1217,11 @@ export default function Home() {
               {/* Eyebrow */}
               <div className="flex items-center gap-3 mb-10">
                 <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0" style={{ animation: 'blink 1.4s ease-in-out infinite' }} />
-                <span className="text-[10px] font-black uppercase tracking-[0.55em] text-orange-500">{l.hero.tag}</span>
+                <span className="text-xs font-black uppercase tracking-[0.55em] text-orange-500">{l.hero.tag}</span>
               </div>
 
               {/* Giant headline */}
-              <h1 className="font-black italic uppercase leading-[0.86] tracking-tighter text-white mb-8" style={{ fontSize: 'clamp(4rem, 10.5vw, 10.5rem)' }}>
+              <h1 className="font-display font-black italic uppercase leading-[0.86] tracking-tighter text-white mb-8" style={{ fontSize: 'clamp(4rem, 10.5vw, 10.5rem)' }}>
                 RUN<br />
                 <span className="text-orange-500">BEYOND</span><br />
                 REALITY.
@@ -1264,7 +1264,7 @@ export default function Home() {
               {/* Tech specs strip */}
               <div className="mt-14 flex items-center gap-5">
                 <div className="h-px w-10 bg-white/15" />
-                <span className="text-[9px] uppercase tracking-[0.45em] text-white/20">&lt;12ms · 6 sensors · 8h battery</span>
+                <span className="text-[11px] uppercase tracking-[0.45em] text-white/40">&lt;12ms · 6 sensors · 8h battery</span>
               </div>
             </div>
 
@@ -1285,11 +1285,11 @@ export default function Home() {
             {/* Scroll hint */}
             <div className="absolute bottom-8 left-8 md:left-16 xl:left-24 flex items-center gap-4 z-10">
               <div className="w-px h-10 bg-gradient-to-b from-white/20 to-transparent" />
-              <span className="text-[9px] uppercase tracking-[0.45em] text-white/20">Scroll</span>
+              <span className="text-[11px] uppercase tracking-[0.45em] text-white/40">Scroll</span>
             </div>
 
             {/* Panel index */}
-            <div className="absolute bottom-8 right-8 text-[9px] uppercase tracking-[0.4em] text-white/15 z-10">01 / 03</div>
+            <div className="absolute bottom-8 right-8 text-[11px] uppercase tracking-[0.4em] text-white/30 z-10">01 / 03</div>
           </div>
 
           {/* ── PANEL 2: HUD Interface ────────────────────────────────────── */}
@@ -1298,11 +1298,11 @@ export default function Home() {
             {/* Eyebrow */}
             <div className="flex items-center gap-5 mb-8">
               <div className="h-px w-10 bg-orange-500/40" />
-              <span className="text-[9px] font-black uppercase tracking-[0.55em] text-orange-500/70">02 / Live HUD Interface</span>
+              <span className="text-[11px] font-black uppercase tracking-[0.55em] text-orange-500/70">02 / Live HUD Interface</span>
               <div className="h-px w-10 bg-orange-500/40" />
             </div>
 
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-black italic uppercase tracking-tighter text-white text-center mb-10 leading-none">
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-display font-black italic uppercase tracking-tighter text-white text-center mb-10 leading-none">
               Every metric.<br />Every moment.
             </h2>
 
@@ -1316,9 +1316,9 @@ export default function Home() {
                 onMouseLeave={() => setBpmHovering(false)}
               >
                 <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-red-500/60 via-transparent to-red-500/60 animate-[pulseLine_2.4s_linear_infinite]" />
-                <p className="text-[9px] font-black text-red-300/70 uppercase tracking-widest mb-3">{l.hud.bpm}</p>
+                <p className="text-[11px] font-black text-red-300/70 uppercase tracking-widest mb-3">{l.hud.bpm}</p>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-6xl font-black italic tracking-tighter text-red-400 tabular-nums" style={{ animation: bpmHovering ? 'none' : 'heartbeat 1.2s ease-in-out infinite' }}>
+                  <span className="text-6xl font-display font-black italic tracking-tighter text-red-400 tabular-nums" style={{ animation: bpmHovering ? 'none' : 'heartbeat 1.2s ease-in-out infinite' }}>
                     <span ref={bpmRef}>{bpmHovering ? bpmLive : bpmVal.toFixed(0)}</span>
                   </span>
                   <div className={`w-2.5 h-2.5 rounded-full bg-red-500 animate-ping`} style={{ animationDuration: bpmHovering ? '0.4s' : '1s' }} />
@@ -1328,7 +1328,7 @@ export default function Home() {
                     <path d="M0,18 L28,18 L36,6 L44,30 L50,18 L68,18 L74,12 L80,24 L86,18 L110,18 L118,6 L126,30 L132,18 L150,18 L156,12 L162,24 L168,18 L196,18 L204,6 L212,30 L218,18 L220,18" stroke="#f87171" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </div>
-                <p className="text-[8px] font-mono text-white/25 mt-2 uppercase tracking-[0.3em] leading-relaxed">{l.hud.bpmAnnot}</p>
+                <p className="text-[11px] font-mono text-white/45 mt-2 uppercase tracking-[0.3em] leading-relaxed">{l.hud.bpmAnnot}</p>
               </div>
 
               {/* Speed */}
@@ -1338,19 +1338,19 @@ export default function Home() {
                 onMouseLeave={() => setSpeedHovering(false)}
               >
                 <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-orange-400/60 via-transparent to-orange-400/60 animate-[flowLine_3s_linear_infinite]" />
-                <p className="text-[9px] font-black text-orange-300/70 uppercase tracking-widest mb-3">{l.hud.kmh}</p>
+                <p className="text-[11px] font-black text-orange-300/70 uppercase tracking-widest mb-3">{l.hud.kmh}</p>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-5xl font-black italic tracking-tighter text-orange-300 tabular-nums">
+                  <span className="text-5xl font-display font-black italic tracking-tighter text-orange-300 tabular-nums">
                     <span ref={speedRef}>{speedHovering ? speedLive.toFixed(1) : speedVal.toFixed(1)}</span>
                   </span>
-                  <span className="text-[10px] text-orange-200/60 uppercase tracking-[0.3em]">{l.hud.kmh}</span>
+                  <span className="text-xs text-orange-200/60 uppercase tracking-[0.3em]">{l.hud.kmh}</span>
                 </div>
                 <div className="mt-4 flex items-end gap-[3px] h-9">
                   {speedBars.map((h, i) => (
                     <div key={i} className="flex-1 rounded-sm bg-orange-400/40 group-hover:bg-orange-400/70 transition-all" style={{ height: `${h * 100}%`, transitionDuration: speedHovering ? '120ms' : '400ms' }} />
                   ))}
                 </div>
-                <p className="text-[8px] font-mono text-white/25 mt-3 uppercase tracking-[0.3em] leading-relaxed">{l.hud.kmhAnnot}</p>
+                <p className="text-[11px] font-mono text-white/45 mt-3 uppercase tracking-[0.3em] leading-relaxed">{l.hud.kmhAnnot}</p>
               </div>
 
               {/* Battery */}
@@ -1360,9 +1360,9 @@ export default function Home() {
                 onMouseLeave={() => setBatteryHovering(false)}
               >
                 <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-emerald-400/60 via-transparent to-emerald-400/60 animate-[flowLine_3.4s_linear_infinite]" />
-                <p className="text-[9px] font-black text-emerald-300/70 uppercase tracking-widest mb-3">{l.hud.charge}</p>
+                <p className="text-[11px] font-black text-emerald-300/70 uppercase tracking-widest mb-3">{l.hud.charge}</p>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-6xl font-black italic tracking-tighter text-white tabular-nums">
+                  <span className="text-6xl font-display font-black italic tracking-tighter text-white tabular-nums">
                     <span ref={energyRef}>{batteryHovering ? batteryLive : energyVal.toFixed(0)}%</span>
                   </span>
                 </div>
@@ -1370,15 +1370,15 @@ export default function Home() {
                   <div className="absolute inset-y-0 left-0 rounded-full bg-emerald-400/60 transition-all" style={{ width: batteryLevel, transitionDuration: batteryHovering ? '200ms' : '1000ms' }} />
                 </div>
                 <div className="mt-1.5 flex justify-between">
-                  <span className="text-[8px] font-mono text-white/15 uppercase tracking-[0.3em]">0%</span>
-                  <span className="text-[8px] font-mono text-emerald-400/40 uppercase tracking-[0.3em]">{batteryLevel}</span>
-                  <span className="text-[8px] font-mono text-white/15 uppercase tracking-[0.3em]">100%</span>
+                  <span className="text-[11px] font-mono text-white/30 uppercase tracking-[0.3em]">0%</span>
+                  <span className="text-[11px] font-mono text-emerald-400/40 uppercase tracking-[0.3em]">{batteryLevel}</span>
+                  <span className="text-[11px] font-mono text-white/30 uppercase tracking-[0.3em]">100%</span>
                 </div>
-                <p className="text-[8px] font-mono text-white/25 mt-2 uppercase tracking-[0.3em] leading-relaxed">{l.hud.chargeAnnot}</p>
+                <p className="text-[11px] font-mono text-white/45 mt-2 uppercase tracking-[0.3em] leading-relaxed">{l.hud.chargeAnnot}</p>
               </div>
             </div>
 
-            <div className="absolute bottom-8 right-8 text-[9px] uppercase tracking-[0.4em] text-white/15">02 / 03</div>
+            <div className="absolute bottom-8 right-8 text-[11px] uppercase tracking-[0.4em] text-white/30">02 / 03</div>
           </div>
 
           {/* ── PANEL 3: Stats + CTA ─────────────────────────────────────── */}
@@ -1386,7 +1386,7 @@ export default function Home() {
 
             <div className="flex items-center gap-5 mb-14">
               <div className="h-px w-10 bg-orange-500/40" />
-              <span className="text-[9px] font-black uppercase tracking-[0.55em] text-orange-500/70">03 / The Edge</span>
+              <span className="text-[11px] font-black uppercase tracking-[0.55em] text-orange-500/70">03 / The Edge</span>
               <div className="h-px w-10 bg-orange-500/40" />
             </div>
 
@@ -1399,10 +1399,10 @@ export default function Home() {
               ].map((s, i) => (
                 <div key={i}>
                   <div className="flex items-baseline justify-center gap-1 leading-none mb-3">
-                    <span className="font-black italic tracking-tighter text-white" style={{ fontSize: 'clamp(3rem, 8vw, 7rem)' }}>{s.val}</span>
-                    {s.unit && <span className="text-orange-500 font-black italic" style={{ fontSize: 'clamp(1.2rem, 3vw, 2.8rem)' }}>{s.unit}</span>}
+                    <span className="font-display font-black italic tracking-tighter text-white" style={{ fontSize: 'clamp(3rem, 8vw, 7rem)' }}>{s.val}</span>
+                    {s.unit && <span className="text-orange-500 font-display font-black italic" style={{ fontSize: 'clamp(1.2rem, 3vw, 2.8rem)' }}>{s.unit}</span>}
                   </div>
-                  <p className="text-[9px] uppercase tracking-[0.45em] text-white/30">{s.label}</p>
+                  <p className="text-[11px] uppercase tracking-[0.45em] text-white/50">{s.label}</p>
                 </div>
               ))}
             </div>
@@ -1420,7 +1420,7 @@ export default function Home() {
               <svg className="group-hover:translate-x-1 transition-transform duration-200" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </motion.a>
 
-            <div className="absolute bottom-8 right-8 text-[9px] uppercase tracking-[0.4em] text-white/15">03 / 03</div>
+            <div className="absolute bottom-8 right-8 text-[11px] uppercase tracking-[0.4em] text-white/30">03 / 03</div>
           </div>
 
         </section>
@@ -1435,15 +1435,15 @@ export default function Home() {
       {/* ── HOW IT WORKS ─────────────────────────────────────────────────────── */}
       <section data-layer="true" id="how-it-works" className="max-w-7xl mx-auto px-6 py-28 md:py-40">
         <div className="mb-16 max-w-3xl">
-          <p className="text-[9px] uppercase tracking-[0.55em] text-orange-500 mb-5">{l.how.tag}</p>
-          <h2 id="how-title" className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter mb-6 leading-none text-white">{l.how.title}</h2>
+          <p className="text-[11px] uppercase tracking-[0.55em] text-orange-500 mb-5">{l.how.tag}</p>
+          <h2 id="how-title" className="text-5xl md:text-7xl font-display font-black italic uppercase tracking-tighter mb-6 leading-none text-white">{l.how.title}</h2>
           <p id="how-sub" className="text-[15px] text-white/40 leading-relaxed max-w-xl">{l.how.sub}</p>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
           {l.how.features.map((item, i) => (
             <div key={i} className="how-card group rounded-2xl border border-white/[0.06] bg-white/[0.02] p-8 md:p-10 hover:border-orange-500/25 hover:bg-white/[0.04] transition-all duration-300 cursor-default">
               <div className="w-8 h-[2px] bg-orange-500 mb-8 group-hover:w-14 transition-all duration-300" />
-              <p className="text-[10px] uppercase tracking-[0.45em] text-orange-400/70 mb-4">{item.title}</p>
+              <p className="text-xs uppercase tracking-[0.45em] text-orange-400/70 mb-4">{item.title}</p>
               <p className="text-sm text-white/45 leading-relaxed">{item.text}</p>
             </div>
           ))}
@@ -1454,11 +1454,11 @@ export default function Home() {
       <section id="modules-section" className="relative w-full overflow-hidden pt-16 md:pt-24">
 
         <div className="flex items-center gap-4 md:gap-6 px-4 md:px-6 pb-8 max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-7xl font-black italic uppercase tracking-tighter text-white shrink-0">
+          <h2 className="text-4xl md:text-7xl font-display font-black italic uppercase tracking-tighter text-white shrink-0">
             {l.modules.title}
           </h2>
           <div className="h-[2px] flex-1 bg-white/[0.06]" />
-          <span className="hidden md:block text-[9px] uppercase tracking-[0.4em] text-white/20">← drag or scroll →</span>
+          <span className="hidden md:block text-[11px] uppercase tracking-[0.4em] text-white/40">← drag or scroll →</span>
         </div>
 
         <div id="cf-stage" className="relative w-full select-none" style={{ height: '400px', perspective: '1200px' }}>
@@ -1494,9 +1494,9 @@ export default function Home() {
 
                 {/* Card info */}
                 <div className="absolute bottom-0 inset-x-0 p-4 z-20">
-                  <p className="font-mono text-[9px] text-orange-400/50 uppercase tracking-[0.4em] mb-1">{mod.id}</p>
-                  <h3 className="text-[15px] font-black italic uppercase leading-tight text-white group-hover:text-white transition-colors">{mod.title}</h3>
-                  <p className="text-[11px] text-white/30 font-mono mt-0.5">${mod.price} / mo</p>
+                  <p className="font-mono text-[11px] text-orange-400/50 uppercase tracking-[0.4em] mb-1">{mod.id}</p>
+                  <h3 className="text-[15px] font-display font-black italic uppercase leading-tight text-white group-hover:text-white transition-colors">{mod.title}</h3>
+                  <p className="text-[11px] text-white/50 font-mono mt-0.5">${mod.price} / mo</p>
                 </div>
               </div>
             </div>
@@ -1507,7 +1507,7 @@ export default function Home() {
           {l.modules.items.map((mod, i) => (
             <div key={mod.id} className="cf-info absolute inset-x-0 top-0 flex flex-col items-center text-center px-6"
               style={{ opacity: i === 0 ? 1 : 0, transform: i === 0 ? 'translateY(0px)' : 'translateY(10px)', transition: 'opacity 0.3s ease, transform 0.3s ease', pointerEvents: i === 0 ? 'auto' : 'none' }}>
-              <p className="text-[11px] text-white/35 uppercase tracking-[0.3em] max-w-xs leading-relaxed mb-4">{mod.desc}</p>
+              <p className="text-[11px] text-white/60 uppercase tracking-[0.3em] max-w-xs leading-relaxed mb-4">{mod.desc}</p>
               <button className="px-8 py-3 bg-orange-500 text-black font-black uppercase italic text-[11px] tracking-widest hover:bg-white transition-colors duration-200 active:scale-95 rounded-sm">
                 {l.modules.btn}
               </button>
@@ -1527,8 +1527,8 @@ export default function Home() {
 
         {/* Header */}
         <div className="mb-12">
-          <p className="text-[9px] uppercase tracking-[0.55em] text-orange-500 mb-4">{l.ways.tag}</p>
-          <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white leading-none">{l.ways.title}</h2>
+          <p className="text-[11px] uppercase tracking-[0.55em] text-orange-500 mb-4">{l.ways.tag}</p>
+          <h2 className="text-5xl md:text-7xl font-display font-black italic uppercase tracking-tighter text-white leading-none">{l.ways.title}</h2>
         </div>
 
         {/* Cards grid */}
@@ -1566,7 +1566,7 @@ export default function Home() {
 
               {/* Content */}
               <div className="flex-1">
-                <h3 className="text-2xl md:text-3xl font-black italic uppercase tracking-tight text-white mb-4 leading-tight">
+                <h3 className="text-2xl md:text-3xl font-display font-black italic uppercase tracking-tight text-white mb-4 leading-tight">
                   {item.title}
                 </h3>
                 <p className="text-sm text-white/40 leading-relaxed">
@@ -1581,7 +1581,7 @@ export default function Home() {
               <div className="flex items-center gap-3">
                 <a
                   href={item.href}
-                  className="flex-1 flex items-center justify-center py-3.5 px-5 bg-white text-black font-black uppercase text-[10px] tracking-[0.35em] rounded-xl hover:bg-orange-500 transition-colors duration-200 active:scale-[0.98]"
+                  className="flex-1 flex items-center justify-center py-3.5 px-5 bg-white text-black font-black uppercase text-xs tracking-[0.35em] rounded-xl hover:bg-orange-500 transition-colors duration-200 active:scale-[0.98]"
                 >
                   {item.cta}
                 </a>
@@ -1604,8 +1604,8 @@ export default function Home() {
 
         {/* Header */}
         <div id="pricing-title" className="mb-14 max-w-3xl">
-          <p className="text-[9px] uppercase tracking-[0.55em] text-orange-500 mb-5">{l.pricing.tag}</p>
-          <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter mb-5 leading-none text-white">{l.pricing.title}</h2>
+          <p className="text-[11px] uppercase tracking-[0.55em] text-orange-500 mb-5">{l.pricing.tag}</p>
+          <h2 className="text-5xl md:text-7xl font-display font-black italic uppercase tracking-tighter mb-5 leading-none text-white">{l.pricing.title}</h2>
           <p className="text-sm text-white/40 leading-relaxed max-w-lg">{l.pricing.sub}</p>
         </div>
 
@@ -1615,10 +1615,10 @@ export default function Home() {
             <button
               key={String(isYearly)}
               onClick={() => setPricingYearly(isYearly)}
-              className={`px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-[0.35em] transition-all duration-200 ${
+              className={`px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-[0.35em] transition-all duration-200 ${
                 pricingYearly === isYearly
                   ? 'bg-orange-500 text-black shadow-[0_0_20px_rgba(249,115,22,0.35)]'
-                  : 'text-white/35 hover:text-white/60'
+                  : 'text-white/60 hover:text-white/60'
               }`}
             >
               {isYearly ? l.pricing.yearly : l.pricing.monthly}
@@ -1643,7 +1643,7 @@ export default function Home() {
                 {/* Badge */}
                 {plan.badge && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="px-4 py-1 bg-orange-500 text-black font-black uppercase text-[9px] tracking-[0.4em] rounded-full shadow-[0_0_20px_rgba(249,115,22,0.5)]">
+                    <span className="px-4 py-1 bg-orange-500 text-black font-black uppercase text-[11px] tracking-[0.4em] rounded-full shadow-[0_0_20px_rgba(249,115,22,0.5)]">
                       {plan.badge}
                     </span>
                   </div>
@@ -1651,24 +1651,24 @@ export default function Home() {
 
                 {/* Plan name + label */}
                 <div className="mb-8">
-                  <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-white/25 mb-2">{plan.id}</p>
-                  <h3 className={`text-2xl font-black italic uppercase tracking-tight mb-1 ${isHighlighted ? 'text-white' : 'text-white/80'}`}>
+                  <p className="font-mono text-[11px] uppercase tracking-[0.45em] text-white/45 mb-2">{plan.id}</p>
+                  <h3 className={`text-2xl font-display font-black italic uppercase tracking-tight mb-1 ${isHighlighted ? 'text-white' : 'text-white/80'}`}>
                     {plan.name}
                   </h3>
-                  <p className="text-[9px] uppercase tracking-[0.35em] text-white/25">{plan.label}</p>
+                  <p className="text-[11px] uppercase tracking-[0.35em] text-white/45">{plan.label}</p>
                 </div>
 
                 {/* Price */}
                 <div className="flex items-baseline gap-1 mb-8">
                   {price === '0' ? (
-                    <span className="text-6xl font-black italic tracking-tighter text-white">Free</span>
+                    <span className="text-6xl font-display font-black italic tracking-tighter text-white">Free</span>
                   ) : (
                     <>
-                      <span className={`text-[2rem] font-black italic mt-1 ${isHighlighted ? 'text-orange-400' : 'text-white/50'}`}>$</span>
-                      <span className={`text-6xl font-black italic tracking-tighter leading-none ${isHighlighted ? 'text-white' : 'text-white'}`}>
+                      <span className={`text-[2rem] font-display font-black italic mt-1 ${isHighlighted ? 'text-orange-400' : 'text-white/50'}`}>$</span>
+                      <span className={`text-6xl font-display font-black italic tracking-tighter leading-none ${isHighlighted ? 'text-white' : 'text-white'}`}>
                         {price}
                       </span>
-                      <span className="text-[11px] text-white/30 uppercase tracking-[0.3em] mb-1 self-end">{plan.unit}</span>
+                      <span className="text-[11px] text-white/50 uppercase tracking-[0.3em] mb-1 self-end">{plan.unit}</span>
                     </>
                   )}
                 </div>
@@ -1680,7 +1680,7 @@ export default function Home() {
                 <ul className="space-y-3.5 mb-10 flex-1">
                   {plan.features.map((feat, fi) => (
                     <li key={fi} className="flex items-start gap-3">
-                      <span className={`mt-0.5 shrink-0 text-sm leading-none ${isHighlighted ? 'text-orange-500' : 'text-white/30'}`}>✓</span>
+                      <span className={`mt-0.5 shrink-0 text-sm leading-none ${isHighlighted ? 'text-orange-500' : 'text-white/50'}`}>✓</span>
                       <span className="text-[12px] text-white/55 leading-snug">{feat}</span>
                     </li>
                   ))}
@@ -1703,7 +1703,7 @@ export default function Home() {
         </div>
 
         {/* Bottom footnote */}
-        <p className="mt-8 text-center text-[9px] uppercase tracking-[0.45em] text-white/20">
+        <p className="mt-8 text-center text-[11px] uppercase tracking-[0.45em] text-white/40">
           No credit card required · Cancel anytime · Secure payments
         </p>
 
@@ -1712,13 +1712,13 @@ export default function Home() {
       {/* ── TESTIMONIALS — MARQUEE ────────────────────────────────────────────── */}
       <section data-layer="true" id="testimonials" className="pb-24 pt-4 overflow-hidden">
         <div id="reviews-header" className="max-w-7xl mx-auto px-6 mb-14">
-          <p className="text-[9px] uppercase tracking-[0.55em] text-orange-500 mb-5">{l.reviews.tag}</p>
+          <p className="text-[11px] uppercase tracking-[0.55em] text-orange-500 mb-5">{l.reviews.tag}</p>
           <div className="flex flex-col md:flex-row md:items-end gap-6 md:gap-12">
-            <h2 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter text-white leading-[0.92] shrink-0">{l.reviews.title}</h2>
+            <h2 className="text-4xl md:text-6xl font-display font-black italic uppercase tracking-tighter text-white leading-[0.92] shrink-0">{l.reviews.title}</h2>
             <div className="md:pb-1">
               <p className="text-sm text-white/40 leading-relaxed max-w-lg mb-6">{l.reviews.sub}</p>
               <div className="flex flex-wrap gap-2">
-                {l.reviews.tags.map((tag, i) => (<span key={i} className="rounded-full px-4 py-2 text-[9px] uppercase tracking-[0.35em] border border-white/[0.08] text-white/30">{tag}</span>))}
+                {l.reviews.tags.map((tag, i) => (<span key={i} className="rounded-full px-4 py-2 text-[11px] uppercase tracking-[0.35em] border border-white/[0.08] text-white/50">{tag}</span>))}
               </div>
             </div>
           </div>
@@ -1732,7 +1732,7 @@ export default function Home() {
                 <p className="text-sm text-white/55 leading-relaxed mb-6">{item.text}</p>
                 <div className="flex items-center gap-3">
                   <Image src={item.img} alt={item.author} width={36} height={36} className="rounded-full object-cover border border-white/[0.1]" />
-                  <div><p className="text-xs font-bold text-white">{item.author}</p><p className="text-[9px] uppercase tracking-[0.3em] text-white/30">{item.role}</p></div>
+                  <div><p className="text-xs font-bold text-white">{item.author}</p><p className="text-[11px] uppercase tracking-[0.3em] text-white/50">{item.role}</p></div>
                 </div>
               </blockquote>
             ))}
@@ -1749,7 +1749,7 @@ export default function Home() {
                 <p className="text-sm text-white/55 leading-relaxed mb-6">{item.text}</p>
                 <div className="flex items-center gap-3">
                   <Image src={item.img} alt={item.author} width={36} height={36} className="rounded-full object-cover border border-white/[0.1]" />
-                  <div><p className="text-xs font-bold text-white">{item.author}</p><p className="text-[9px] uppercase tracking-[0.3em] text-white/30">{item.role}</p></div>
+                  <div><p className="text-xs font-bold text-white">{item.author}</p><p className="text-[11px] uppercase tracking-[0.3em] text-white/50">{item.role}</p></div>
                 </div>
               </blockquote>
             ))}
@@ -1774,10 +1774,10 @@ export default function Home() {
 
             {/* Left — text + buttons */}
             <div className="px-10 py-14 md:px-16 md:py-20 flex flex-col justify-center">
-              <p className="text-[9px] uppercase tracking-[0.55em] text-orange-500 mb-6">{l.cta.tag}</p>
+              <p className="text-[11px] uppercase tracking-[0.55em] text-orange-500 mb-6">{l.cta.tag}</p>
 
               <h2
-                className="font-black italic uppercase tracking-tighter text-white leading-[0.88] mb-7"
+                className="font-display font-black italic uppercase tracking-tighter text-white leading-[0.88] mb-7"
                 style={{ fontSize: 'clamp(2.8rem, 6vw, 5.5rem)' }}
               >
                 {l.cta.title.split('\n').map((line, i) => (
@@ -1790,10 +1790,10 @@ export default function Home() {
               </p>
 
               <div className="flex flex-wrap gap-4">
-                <button onClick={() => { setChatOpen(true); setChatTab('home'); }} className="px-9 py-4 bg-white text-black font-black uppercase text-[10px] tracking-[0.4em] rounded-full hover:bg-orange-500 hover:text-white transition-all duration-200 active:scale-[0.97]">
+                <button onClick={() => { setChatOpen(true); setChatTab('home'); }} className="px-9 py-4 bg-white text-black font-black uppercase text-xs tracking-[0.4em] rounded-full hover:bg-orange-500 hover:text-white transition-all duration-200 active:scale-[0.97]">
                   {l.cta.btn1}
                 </button>
-                <a href="#modules-section" className="px-9 py-4 border border-white/[0.15] text-white/60 font-black uppercase text-[10px] tracking-[0.4em] rounded-full hover:border-white/40 hover:text-white transition-all duration-200">
+                <a href="#modules-section" className="px-9 py-4 border border-white/[0.15] text-white/60 font-black uppercase text-xs tracking-[0.4em] rounded-full hover:border-white/40 hover:text-white transition-all duration-200">
                   {l.cta.btn2} →
                 </a>
               </div>
@@ -1819,11 +1819,11 @@ export default function Home() {
 
               {/* Floating stat badge */}
               <div className="absolute bottom-8 left-8 right-8 rounded-2xl border border-white/20 bg-black/50 backdrop-blur-sm px-5 py-4">
-                <p className="text-[8px] uppercase tracking-[0.45em] text-white/40 mb-1">Current session</p>
+                <p className="text-[11px] uppercase tracking-[0.45em] text-white/40 mb-1">Current session</p>
                 <div className="flex items-baseline gap-2">
-                  <span className="text-3xl font-black italic text-white">18.5</span>
-                  <span className="text-[10px] text-orange-400 uppercase tracking-[0.3em]">km/h</span>
-                  <span className="ml-auto text-[10px] font-mono text-emerald-400">● LIVE</span>
+                  <span className="text-3xl font-display font-black italic text-white">18.5</span>
+                  <span className="text-xs text-orange-400 uppercase tracking-[0.3em]">km/h</span>
+                  <span className="ml-auto text-xs font-mono text-emerald-400">● LIVE</span>
                 </div>
               </div>
             </div>
@@ -1835,8 +1835,8 @@ export default function Home() {
       {/* ── SOCIAL / CONNECT ──────────────────────────────────────────────────── */}
       <section id="connect-section" className="max-w-7xl mx-auto px-6 pb-24 pt-4">
         <div className="mb-12">
-          <p className="text-[9px] uppercase tracking-[0.55em] text-orange-500 mb-4">{l.social.tag}</p>
-          <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white leading-none">{l.social.title}</h2>
+          <p className="text-[11px] uppercase tracking-[0.55em] text-orange-500 mb-4">{l.social.tag}</p>
+          <h2 className="text-5xl md:text-7xl font-display font-black italic uppercase tracking-tighter text-white leading-none">{l.social.title}</h2>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
           {l.social.items.map((item) => {
@@ -1852,13 +1852,13 @@ export default function Home() {
                   {isDc && <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-white/50 group-hover:text-orange-400 transition-colors duration-300"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.033.055a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>}
                 </div>
                 <div className="flex-1">
-                  <p className="font-mono text-[9px] uppercase tracking-[0.45em] text-white/25 mb-2">{item.id}</p>
-                  <h3 className="text-2xl md:text-3xl font-black italic uppercase tracking-tight text-white mb-4 leading-tight">{item.title}</h3>
+                  <p className="font-mono text-[11px] uppercase tracking-[0.45em] text-white/45 mb-2">{item.id}</p>
+                  <h3 className="text-2xl md:text-3xl font-display font-black italic uppercase tracking-tight text-white mb-4 leading-tight">{item.title}</h3>
                   <p className="text-sm text-white/40 leading-relaxed">{item.desc}</p>
                 </div>
                 <div className="mt-8 mb-6 h-px bg-white/[0.05] group-hover:bg-orange-500/15 transition-colors duration-300" />
                 <div className="flex items-center gap-3">
-                  <span className="flex-1 flex items-center justify-center py-3.5 px-5 bg-white text-black font-black uppercase text-[10px] tracking-[0.35em] rounded-xl group-hover:bg-orange-500 group-hover:text-white transition-colors duration-200">{item.cta}</span>
+                  <span className="flex-1 flex items-center justify-center py-3.5 px-5 bg-white text-black font-black uppercase text-xs tracking-[0.35em] rounded-xl group-hover:bg-orange-500 group-hover:text-white transition-colors duration-200">{item.cta}</span>
                   <span className="w-12 h-12 shrink-0 flex items-center justify-center rounded-xl border border-white/[0.1] text-white/40 group-hover:border-orange-500/50 group-hover:text-orange-400 group-hover:bg-orange-500/[0.08] transition-all duration-200">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
                   </span>
@@ -1876,12 +1876,12 @@ export default function Home() {
           <div className="absolute inset-x-0 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
           <div className="relative grid md:grid-cols-[1fr_auto] items-center gap-8">
             <div>
-              <p className="text-[9px] uppercase tracking-[0.55em] text-orange-500 mb-5">{l.faq.tag}</p>
-              <h2 className="font-black italic uppercase tracking-tighter text-white leading-[0.9]" style={{ fontSize:'clamp(2.4rem,5vw,4.5rem)' }}>
+              <p className="text-[11px] uppercase tracking-[0.55em] text-orange-500 mb-5">{l.faq.tag}</p>
+              <h2 className="font-display font-black italic uppercase tracking-tighter text-white leading-[0.9]" style={{ fontSize:'clamp(2.4rem,5vw,4.5rem)' }}>
                 {l.faq.bannerTitle.split('\n').map((line,i) => (<span key={i}>{i>0&&<br/>}{i===1?<span className="text-orange-500">{line}</span>:line}</span>))}
               </h2>
             </div>
-            <p className="text-sm text-white/35 leading-relaxed max-w-xs hidden md:block">{l.faq.bannerSub}</p>
+            <p className="text-sm text-white/60 leading-relaxed max-w-xs hidden md:block">{l.faq.bannerSub}</p>
           </div>
         </div>
         <div className="rounded-[2rem] border border-white/[0.07] bg-white/[0.02] overflow-hidden divide-y divide-white/[0.05]">
@@ -1890,8 +1890,8 @@ export default function Home() {
             return (
               <div key={i} className="faq-row group">
                 <button onClick={() => setOpenFaq(isOpen?null:i)} className="w-full flex items-start gap-6 md:gap-10 px-8 md:px-12 py-7 text-left transition-colors duration-200 hover:bg-white/[0.02]">
-                  <span className="shrink-0 font-mono text-[11px] text-white/20 mt-0.5 w-5 text-right">{String(i+1).padStart(2,'0')}</span>
-                  <span className={`flex-1 text-base md:text-lg font-black italic uppercase tracking-tight leading-snug transition-colors duration-200 ${isOpen?'text-white':'text-white/70 group-hover:text-white'}`}>{item.q}</span>
+                  <span className="shrink-0 font-mono text-[11px] text-white/40 mt-0.5 w-5 text-right">{String(i+1).padStart(2,'0')}</span>
+                  <span className={`flex-1 text-base md:text-lg font-display font-black italic uppercase tracking-tight leading-snug transition-colors duration-200 ${isOpen?'text-white':'text-white/70 group-hover:text-white'}`}>{item.q}</span>
                   <span className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full border transition-all duration-300 mt-0.5" style={{ borderColor:isOpen?'rgba(249,115,22,0.5)':'rgba(255,255,255,0.1)', background:isOpen?'rgba(249,115,22,0.1)':'transparent', color:isOpen?'rgb(251,146,60)':'rgba(255,255,255,0.3)', transform:isOpen?'rotate(45deg)':'rotate(0deg)' }}>
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
                   </span>
@@ -1911,30 +1911,30 @@ export default function Home() {
           <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.6fr_repeat(3,1fr)_1.2fr]">
             <div className="sm:col-span-2 lg:col-span-1">
               <div className="flex items-center gap-2 mb-5"><span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0" /><p className="text-[11px] font-black uppercase tracking-[0.5em] text-white">{l.footer.brand}</p></div>
-              <p className="text-sm text-white/30 leading-relaxed max-w-[220px]">{l.footer.sub}</p>
+              <p className="text-sm text-white/50 leading-relaxed max-w-[220px]">{l.footer.sub}</p>
             </div>
             {l.footer.cols.map((col) => (
               <div key={col.heading}>
-                <p className="text-[9px] uppercase tracking-[0.45em] text-white/25 mb-4">{col.heading}</p>
+                <p className="text-[11px] uppercase tracking-[0.45em] text-white/45 mb-4">{col.heading}</p>
                 <ul className="space-y-3">{col.links.map((link) => (<li key={link.label}><a href={link.href} className="text-sm text-white/45 hover:text-white transition-colors duration-200">{link.label}</a></li>))}</ul>
               </div>
             ))}
             <div>
-              <p className="text-[9px] uppercase tracking-[0.45em] text-white/25 mb-4">{l.footer.write}</p>
+              <p className="text-[11px] uppercase tracking-[0.45em] text-white/45 mb-4">{l.footer.write}</p>
               <a href="mailto:hello@visionrun.com" className="text-sm text-white/45 hover:text-orange-400 transition-colors duration-200 block mb-8">{l.footer.email}</a>
-              <p className="text-[9px] uppercase tracking-[0.45em] text-white/25 mb-4">{l.footer.follow}</p>
+              <p className="text-[11px] uppercase tracking-[0.45em] text-white/45 mb-4">{l.footer.follow}</p>
               <div className="flex items-center gap-3">
                 {[{href:'https://instagram.com/',icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" strokeWidth="0"/></svg>},
                   {href:'https://t.me/',icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M21.93 3.24L2.46 10.96c-1.3.52-1.29 1.25-.24 1.57l4.9 1.53 11.35-7.16c.54-.33 1.03-.15.63.21L8.45 16.5l-.38 4.98c.56 0 .81-.26 1.12-.56l2.69-2.61 4.97 3.67c.91.5 1.57.24 1.8-.85l3.25-15.3c.33-1.32-.5-1.92-1.07-1.59z"/></svg>},
                   {href:'https://discord.com/',icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.033.055a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>}
-                ].map((s,i) => (<a key={i} href={s.href} target="_blank" rel="noopener noreferrer" className="w-9 h-9 flex items-center justify-center rounded-xl border border-white/[0.1] text-white/35 hover:border-orange-500/40 hover:text-orange-400 hover:bg-orange-500/[0.07] transition-all duration-200">{s.icon}</a>))}
+                ].map((s,i) => (<a key={i} href={s.href} target="_blank" rel="noopener noreferrer" className="w-9 h-9 flex items-center justify-center rounded-xl border border-white/[0.1] text-white/60 hover:border-orange-500/40 hover:text-orange-400 hover:bg-orange-500/[0.07] transition-all duration-200">{s.icon}</a>))}
               </div>
             </div>
           </div>
           <div className="mt-12 border-t border-white/[0.05]" />
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-[9px] uppercase tracking-[0.45em] text-white/20">{l.footer.copy} · {l.footer.tagline}</p>
-            <div className="flex items-center gap-6">{l.footer.legal.map((item) => (<a key={item} href="#" className="text-[9px] uppercase tracking-[0.4em] text-white/20 hover:text-white/50 transition-colors duration-200">{item}</a>))}</div>
+            <p className="text-[11px] uppercase tracking-[0.45em] text-white/40">{l.footer.copy} · {l.footer.tagline}</p>
+            <div className="flex items-center gap-6">{l.footer.legal.map((item) => (<a key={item} href="#" className="text-[11px] uppercase tracking-[0.4em] text-white/40 hover:text-white/50 transition-colors duration-200">{item}</a>))}</div>
           </div>
         </div>
       </footer>
@@ -1964,7 +1964,7 @@ export default function Home() {
                   <button
                     key={tab.id}
                     onClick={() => setChatTab(tab.id)}
-                    className="flex-1 flex flex-col items-center gap-1 py-3 text-[9px] uppercase tracking-[0.35em] relative transition-colors duration-200"
+                    className="flex-1 flex flex-col items-center gap-1 py-3 text-[11px] uppercase tracking-[0.35em] relative transition-colors duration-200"
                     style={{ color: chatTab===tab.id ? '#fb923c' : 'rgba(255,255,255,0.25)' }}
                   >
                     {tab.icon}
@@ -1991,7 +1991,7 @@ export default function Home() {
                 >
                   {/* Hero header */}
                   <div className="relative px-6 pt-7 pb-7 bg-gradient-to-b from-orange-500/[0.07] to-transparent">
-                    <button onClick={()=>setChatOpen(false)} className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-full border border-white/[0.1] text-white/30 hover:text-white hover:border-white/30 transition-all text-lg leading-none">×</button>
+                    <button onClick={()=>setChatOpen(false)} className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-full border border-white/[0.1] text-white/50 hover:text-white hover:border-white/30 transition-all text-lg leading-none">×</button>
                     <div className="flex items-center mb-5">
                       {['https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=48&h=48&fit=crop&crop=face','https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=48&h=48&fit=crop&crop=face','https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?w=48&h=48&fit=crop&crop=face'].map((src,i)=>(
                         <motion.div key={i} initial={{ opacity:0, x:-8 }} animate={{ opacity:1, x:0 }} transition={{ delay: i*0.06, type:'spring', stiffness:300, damping:24 }}
@@ -2001,10 +2001,10 @@ export default function Home() {
                       ))}
                       <span className="ml-3 flex items-center gap-1.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"/>
-                        <span className="text-[9px] uppercase tracking-[0.35em] text-white/30">{lang==='ru'?'Онлайн':'Online'}</span>
+                        <span className="text-[11px] uppercase tracking-[0.35em] text-white/50">{lang==='ru'?'Онлайн':'Online'}</span>
                       </span>
                     </div>
-                    <motion.h3 initial={{ opacity:0, y:6 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.08 }} className="text-2xl font-black italic uppercase tracking-tight text-white mb-1">
+                    <motion.h3 initial={{ opacity:0, y:6 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.08 }} className="text-2xl font-display font-black italic uppercase tracking-tight text-white mb-1">
                       {lang==='ru'?'Привет 👋':'Hi there 👋'}
                     </motion.h3>
                     <motion.p initial={{ opacity:0, y:6 }} animate={{ opacity:1, y:0 }} transition={{ delay:0.13 }} className="text-sm text-white/45 leading-snug">
@@ -2019,7 +2019,7 @@ export default function Home() {
                       className="group w-full flex items-center justify-between rounded-2xl border border-white/[0.08] bg-white/[0.03] hover:border-orange-500/30 hover:bg-orange-500/[0.05] transition-all duration-200 px-5 py-4">
                       <div className="text-left">
                         <p className="text-sm font-bold text-white mb-0.5">{lang==='ru'?'Написать нам':'Chat with us'}</p>
-                        <p className="text-[10px] text-white/35 uppercase tracking-[0.3em]">{lang==='ru'?'Ответим быстро':'We reply shortly'}</p>
+                        <p className="text-xs text-white/60 uppercase tracking-[0.3em]">{lang==='ru'?'Ответим быстро':'We reply shortly'}</p>
                       </div>
                       <span className="w-9 h-9 flex items-center justify-center rounded-full bg-orange-500/15 text-orange-400 group-hover:bg-orange-500 group-hover:text-black transition-all duration-200 shrink-0">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -2029,7 +2029,7 @@ export default function Home() {
 
                   {/* FAQ quick links */}
                   <div className="px-4 pb-4">
-                    <p className="text-[9px] uppercase tracking-[0.4em] text-white/20 px-1 mb-1">{lang==='ru'?'Частые вопросы':'Quick answers'}</p>
+                    <p className="text-[11px] uppercase tracking-[0.4em] text-white/40 px-1 mb-1">{lang==='ru'?'Частые вопросы':'Quick answers'}</p>
                     {(lang==='ru'?['Как работают AR-очки?','Что входит в бесплатный план?','Как подключить тренера?']:['How do the AR glasses work?',"What's in the free plan?",'How do I connect my coach?']).map((q,i)=>(
                       <motion.button key={i} initial={{ opacity:0, x:-10 }} animate={{ opacity:1, x:0 }} transition={{ delay: 0.18+i*0.06 }}
                         onClick={()=>setChatTab('chat')}
@@ -2051,14 +2051,14 @@ export default function Home() {
                 >
                   {/* Chat header */}
                   <div className="flex items-center gap-3 px-5 py-4 border-b border-white/[0.07] shrink-0">
-                    <button onClick={()=>setChatTab('home')} className="w-7 h-7 flex items-center justify-center rounded-full border border-white/[0.1] text-white/30 hover:text-white hover:border-white/30 transition-colors text-sm">
+                    <button onClick={()=>setChatTab('home')} className="w-7 h-7 flex items-center justify-center rounded-full border border-white/[0.1] text-white/50 hover:text-white hover:border-white/30 transition-colors text-sm">
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
                     </button>
                     <div className="flex-1">
                       <p className="text-xs font-bold text-white">Vision Run Support</p>
-                      <p className="text-[9px] uppercase tracking-[0.3em] text-emerald-400/70">{lang==='ru'?'● Онлайн':'● Online'}</p>
+                      <p className="text-[11px] uppercase tracking-[0.3em] text-emerald-400/70">{lang==='ru'?'● Онлайн':'● Online'}</p>
                     </div>
-                    <button onClick={()=>setChatOpen(false)} className="w-7 h-7 flex items-center justify-center rounded-full border border-white/[0.1] text-white/30 hover:text-white hover:border-white/30 transition-colors text-lg leading-none">×</button>
+                    <button onClick={()=>setChatOpen(false)} className="w-7 h-7 flex items-center justify-center rounded-full border border-white/[0.1] text-white/50 hover:text-white hover:border-white/30 transition-colors text-lg leading-none">×</button>
                   </div>
 
                   {/* Messages */}
@@ -2145,7 +2145,7 @@ export default function Home() {
               {/* Close */}
               <button
                 onClick={closeModal}
-                className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full border border-white/[0.08] text-white/30 hover:text-white hover:border-white/30 transition-all z-10 text-lg leading-none"
+                className="absolute top-5 right-5 w-9 h-9 flex items-center justify-center rounded-full border border-white/[0.08] text-white/50 hover:text-white hover:border-white/30 transition-all z-10 text-lg leading-none"
               >×</button>
 
               {modalStep === 'plan' ? (
@@ -2153,16 +2153,16 @@ export default function Home() {
 
                   {/* Plan header */}
                   <div className="mb-8">
-                    <p className="font-mono text-[9px] uppercase tracking-[0.5em] text-white/25 mb-2">{selectedPlan.id}</p>
+                    <p className="font-mono text-[11px] uppercase tracking-[0.5em] text-white/45 mb-2">{selectedPlan.id}</p>
                     <div className="flex items-center gap-3 mb-1">
-                      <h3 className="text-3xl font-black italic uppercase tracking-tight text-white">{selectedPlan.name}</h3>
+                      <h3 className="text-3xl font-display font-black italic uppercase tracking-tight text-white">{selectedPlan.name}</h3>
                       {selectedPlan.badge && (
-                        <span className="px-3 py-1 bg-orange-500 text-black font-black uppercase text-[8px] tracking-[0.4em] rounded-full">
+                        <span className="px-3 py-1 bg-orange-500 text-black font-black uppercase text-[11px] tracking-[0.4em] rounded-full">
                           {selectedPlan.badge}
                         </span>
                       )}
                     </div>
-                    <p className="text-[10px] uppercase tracking-[0.35em] text-white/25">{selectedPlan.label}</p>
+                    <p className="text-xs uppercase tracking-[0.35em] text-white/45">{selectedPlan.label}</p>
                   </div>
 
                   {/* Billing toggle */}
@@ -2171,10 +2171,10 @@ export default function Home() {
                       <button
                         key={String(isY)}
                         onClick={() => setModalYearly(isY)}
-                        className={`px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-[0.35em] transition-all duration-200 ${
+                        className={`px-5 py-2 rounded-full text-[11px] font-black uppercase tracking-[0.35em] transition-all duration-200 ${
                           modalYearly === isY
                             ? 'bg-orange-500 text-black'
-                            : 'text-white/35 hover:text-white/60'
+                            : 'text-white/60 hover:text-white/60'
                         }`}
                       >
                         {isY ? l.pricing.yearly : l.pricing.monthly}
@@ -2185,17 +2185,17 @@ export default function Home() {
                   {/* Price display */}
                   <div className="flex items-baseline gap-1.5 mb-8">
                     {(modalYearly ? selectedPlan.yearlyPrice : selectedPlan.monthlyPrice) === '0' ? (
-                      <span className="text-7xl font-black italic tracking-tighter text-white">Free</span>
+                      <span className="text-7xl font-display font-black italic tracking-tighter text-white">Free</span>
                     ) : (
                       <>
-                        <span className="text-2xl font-black italic text-orange-400 mt-2">$</span>
-                        <span className="text-7xl font-black italic tracking-tighter leading-none text-white">
+                        <span className="text-2xl font-display font-black italic text-orange-400 mt-2">$</span>
+                        <span className="text-7xl font-display font-black italic tracking-tighter leading-none text-white">
                           {modalYearly ? selectedPlan.yearlyPrice : selectedPlan.monthlyPrice}
                         </span>
                         <div className="self-end mb-2">
-                          <p className="text-[10px] text-white/30 uppercase tracking-[0.3em]">{selectedPlan.unit}</p>
+                          <p className="text-xs text-white/50 uppercase tracking-[0.3em]">{selectedPlan.unit}</p>
                           {modalYearly && selectedPlan.yearlyPrice !== '0' && (
-                            <p className="text-[9px] text-orange-400/70 uppercase tracking-[0.2em]">billed yearly</p>
+                            <p className="text-[11px] text-orange-400/70 uppercase tracking-[0.2em]">billed yearly</p>
                           )}
                         </div>
                       </>
@@ -2209,7 +2209,7 @@ export default function Home() {
                   <ul className="space-y-3 mb-9">
                     {selectedPlan.features.map((feat, fi) => (
                       <li key={fi} className="flex items-center gap-3">
-                        <span className={`w-5 h-5 shrink-0 flex items-center justify-center rounded-full text-[10px] font-black ${selectedPlan.ctaStyle === 'primary' ? 'bg-orange-500/15 text-orange-400' : 'bg-white/[0.06] text-white/40'}`}>✓</span>
+                        <span className={`w-5 h-5 shrink-0 flex items-center justify-center rounded-full text-xs font-black ${selectedPlan.ctaStyle === 'primary' ? 'bg-orange-500/15 text-orange-400' : 'bg-white/[0.06] text-white/40'}`}>✓</span>
                         <span className="text-[13px] text-white/65">{feat}</span>
                       </li>
                     ))}
@@ -2236,7 +2236,7 @@ export default function Home() {
                     </button>
                   )}
 
-                  <p className="mt-4 text-center text-[9px] uppercase tracking-[0.4em] text-white/20">
+                  <p className="mt-4 text-center text-[11px] uppercase tracking-[0.4em] text-white/40">
                     Secure checkout · Cancel anytime
                   </p>
                 </div>
@@ -2245,12 +2245,12 @@ export default function Home() {
                 <div className="p-8 md:p-10">
                   <button
                     onClick={() => setModalStep('plan')}
-                    className="flex items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-white/30 hover:text-white mb-8 transition-colors"
+                    className="flex items-center gap-2 text-xs uppercase tracking-[0.4em] text-white/50 hover:text-white mb-8 transition-colors"
                   >
                     ← {selectedPlan.name} · ${modalYearly ? selectedPlan.yearlyPrice : selectedPlan.monthlyPrice}{selectedPlan.unit}
                   </button>
 
-                  <h3 className="text-2xl font-black italic uppercase tracking-tight text-white mb-7">Complete order</h3>
+                  <h3 className="text-2xl font-display font-black italic uppercase tracking-tight text-white mb-7">Complete order</h3>
 
                   {/* Form */}
                   <div className="space-y-3 mb-7">
@@ -2259,7 +2259,7 @@ export default function Home() {
                       { label: 'Email', type: 'email', placeholder: 'you@example.com' },
                     ].map((field) => (
                       <div key={field.label}>
-                        <p className="text-[9px] uppercase tracking-[0.4em] text-white/30 mb-1.5">{field.label}</p>
+                        <p className="text-[11px] uppercase tracking-[0.4em] text-white/50 mb-1.5">{field.label}</p>
                         <input
                           type={field.type}
                           placeholder={field.placeholder}
@@ -2270,7 +2270,7 @@ export default function Home() {
 
                     {/* Card number */}
                     <div>
-                      <p className="text-[9px] uppercase tracking-[0.4em] text-white/30 mb-1.5">Card number</p>
+                      <p className="text-[11px] uppercase tracking-[0.4em] text-white/50 mb-1.5">Card number</p>
                       <div className="relative">
                         <input
                           type="text"
@@ -2278,17 +2278,17 @@ export default function Home() {
                           maxLength={19}
                           className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-orange-500/50 focus:bg-white/[0.06] transition-all pr-16"
                         />
-                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/20 text-xs tracking-wider">VISA</span>
+                        <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 text-xs tracking-wider">VISA</span>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <p className="text-[9px] uppercase tracking-[0.4em] text-white/30 mb-1.5">Expires</p>
+                        <p className="text-[11px] uppercase tracking-[0.4em] text-white/50 mb-1.5">Expires</p>
                         <input type="text" placeholder="MM / YY" maxLength={7} className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-orange-500/50 transition-all" />
                       </div>
                       <div>
-                        <p className="text-[9px] uppercase tracking-[0.4em] text-white/30 mb-1.5">CVC</p>
+                        <p className="text-[11px] uppercase tracking-[0.4em] text-white/50 mb-1.5">CVC</p>
                         <input type="text" placeholder="•••" maxLength={3} className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl px-4 py-3 text-sm text-white placeholder-white/20 focus:outline-none focus:border-orange-500/50 transition-all" />
                       </div>
                     </div>
@@ -2299,10 +2299,10 @@ export default function Home() {
                     <div className="flex justify-between items-center">
                       <div>
                         <p className="text-sm font-bold text-white">{selectedPlan.name} Plan</p>
-                        <p className="text-[9px] uppercase tracking-[0.3em] text-white/30">{modalYearly ? 'Billed annually' : 'Billed monthly'}</p>
+                        <p className="text-[11px] uppercase tracking-[0.3em] text-white/50">{modalYearly ? 'Billed annually' : 'Billed monthly'}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-lg font-black italic text-white">${modalYearly ? selectedPlan.yearlyPrice : selectedPlan.monthlyPrice}<span className="text-sm text-white/40">{selectedPlan.unit}</span></p>
+                        <p className="text-lg font-display font-black italic text-white">${modalYearly ? selectedPlan.yearlyPrice : selectedPlan.monthlyPrice}<span className="text-sm text-white/40">{selectedPlan.unit}</span></p>
                       </div>
                     </div>
                   </div>
@@ -2317,7 +2317,7 @@ export default function Home() {
                     Pay ${modalYearly ? selectedPlan.yearlyPrice : selectedPlan.monthlyPrice}{selectedPlan.unit}
                   </button>
 
-                  <p className="mt-4 text-center text-[9px] uppercase tracking-[0.4em] text-white/20">
+                  <p className="mt-4 text-center text-[11px] uppercase tracking-[0.4em] text-white/40">
                     🔒 256-bit SSL · Cancel anytime
                   </p>
                 </div>
