@@ -137,7 +137,7 @@ function VisionShowcase({ lang }: { lang: 'en' | 'ru' }) {
   );
 
   return (
-    <section className="relative py-24 overflow-hidden">
+    <section data-layer="true" className="relative py-24 overflow-hidden">
       {/* Background radial */}
       <div className="absolute inset-0 pointer-events-none" style={{ background:`radial-gradient(ellipse 70% 60% at 38% 50%, ${accent}0a 0%, transparent 70%)`, transition:'background 0.6s ease' }} />
 
@@ -146,7 +146,7 @@ function VisionShowcase({ lang }: { lang: 'en' | 'ru' }) {
         <div className="mb-14">
           <p className="text-[9px] uppercase tracking-[0.55em] text-orange-500 mb-4">{lang==='ru'?'Флагманский продукт':'Flagship Product'}</p>
           <div className="flex flex-col md:flex-row md:items-end gap-4 md:gap-12">
-            <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white leading-none">{lang==='ru'?'Vision Showcase.':'Vision Showcase.'}</h2>
+            <h2 className="blur-reveal text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white leading-none">{lang==='ru'?'Vision Showcase.':'Vision Showcase.'}</h2>
             <p className="text-sm text-white/35 max-w-xs leading-relaxed md:pb-1">{lang==='ru'?'Выбери модель, настрой линзу, оправу и HUD-интерфейс.':'Select your model, configure lens, frame and HUD interface.'}</p>
           </div>
         </div>
@@ -328,13 +328,13 @@ function VisionConfigurator({ lang }: { lang: 'en' | 'ru' }) {
   const mode = MODES[active];
 
   return (
-    <section className="relative max-w-7xl mx-auto px-6 py-24">
+    <section data-layer="true" className="relative max-w-7xl mx-auto px-6 py-24">
       {/* Header */}
       <div className="mb-16 text-center">
         <p className="text-[9px] uppercase tracking-[0.55em] text-orange-500 mb-4">
           {lang === 'ru' ? 'Интерактивный конфигуратор' : 'Interactive Configurator'}
         </p>
-        <h2 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white leading-none">
+        <h2 className="blur-reveal text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white leading-none">
           Vision Mode.
         </h2>
         <p className="mt-5 text-sm text-white/35 max-w-sm mx-auto leading-relaxed">
@@ -739,20 +739,36 @@ export default function Home() {
     return () => clearInterval(id);
   }, [batteryHovering]);
 
-  // ── GSAP ─────────────────────────────────────────────────────────────────
+  // ── GSAP + Lenis ─────────────────────────────────────────────────────────
   useEffect(() => {
     let mounted = true;
     let stRef: { getAll(): { kill(): void }[] } | undefined;
     let cfProxy: HTMLElement | null = null;
     let cfDraggable: { kill(): void }[] = [];
+    let lenisInst: { raf:(t:number)=>void; on:(e:string,cb:()=>void)=>void; destroy:()=>void } | null = null;
+    let lenisCb: ((t:number)=>void) | null = null;
+    let gsapRef: { ticker: { remove:(cb:(t:number)=>void)=>void } } | null = null;
 
     const loadGSAP = async () => {
       const { gsap } = await import('gsap');
       const { ScrollTrigger } = await import('gsap/ScrollTrigger');
       const { Draggable } = await import('gsap/Draggable');
+      const { default: Lenis } = await import('lenis');
       if (!mounted) return;
+      gsapRef = gsap as typeof gsapRef;
       gsap.registerPlugin(ScrollTrigger, Draggable);
       stRef = ScrollTrigger;
+
+      // ── Lenis smooth scroll ─────────────────────────────────────────────
+      lenisInst = new Lenis({
+        duration: 1.15,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+      }) as typeof lenisInst;
+      lenisInst!.on('scroll', () => ScrollTrigger.update());
+      lenisCb = (time: number) => lenisInst?.raf(time * 1000);
+      gsap.ticker.add(lenisCb);
+      gsap.ticker.lagSmoothing(0);
 
       // Scroll progress bar
       gsap.to('#scroll-progress', {
@@ -960,6 +976,33 @@ export default function Home() {
 
       // ── Footer ────────────────────────────────────────────────────────────
       gsap.fromTo('footer', { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: 'power2.out', scrollTrigger: { trigger: 'footer', start: 'top 90%', end: 'top 60%', scrub: 0.6 } });
+
+      // ── Heading blur-reveal ───────────────────────────────────────────────
+      gsap.utils.toArray<Element>('.blur-reveal').forEach(el => {
+        gsap.fromTo(el,
+          { opacity: 0, filter: 'blur(16px)', scale: 0.91, y: 22 },
+          { opacity: 1, filter: 'blur(0px)', scale: 1, y: 0,
+            duration: 0.95, ease: 'power2.out',
+            scrollTrigger: { trigger: el, start: 'top 82%', toggleActions: 'play none none none' },
+          },
+        );
+      });
+
+      // ── Section layering exit ─────────────────────────────────────────────
+      gsap.utils.toArray<Element>('[data-layer]').forEach(el => {
+        gsap.to(el, {
+          scale: 0.96,
+          opacity: 0.72,
+          transformOrigin: '50% 0%',
+          ease: 'none',
+          scrollTrigger: {
+            trigger: el,
+            start: 'bottom 55%',
+            end: 'bottom 5%',
+            scrub: true,
+          },
+        });
+      });
     };
 
     loadGSAP();
@@ -968,6 +1011,8 @@ export default function Home() {
       if (stRef) stRef.getAll().forEach(trigger => trigger.kill());
       cfDraggable.forEach(d => d.kill());
       if (cfProxy) { cfProxy.remove(); cfProxy = null; }
+      if (lenisCb && gsapRef) gsapRef.ticker.remove(lenisCb);
+      lenisInst?.destroy();
     };
   }, []);
 
@@ -1376,7 +1421,7 @@ export default function Home() {
       <VisionConfigurator lang={lang} />
 
       {/* ── HOW IT WORKS ─────────────────────────────────────────────────────── */}
-      <section id="how-it-works" className="max-w-7xl mx-auto px-6 py-28 md:py-40">
+      <section data-layer="true" id="how-it-works" className="max-w-7xl mx-auto px-6 py-28 md:py-40">
         <div className="mb-16 max-w-3xl">
           <p className="text-[9px] uppercase tracking-[0.55em] text-orange-500 mb-5">{l.how.tag}</p>
           <h2 id="how-title" className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter mb-6 leading-none text-white">{l.how.title}</h2>
@@ -1466,7 +1511,7 @@ export default function Home() {
       </section>
 
       {/* ── WAYS TO TRAIN ─────────────────────────────────────────────────────── */}
-      <section id="ways-section" className="max-w-7xl mx-auto px-6 pb-24 pt-4">
+      <section data-layer="true" id="ways-section" className="max-w-7xl mx-auto px-6 pb-24 pt-4">
 
         {/* Header */}
         <div className="mb-12">
@@ -1543,7 +1588,7 @@ export default function Home() {
       </section>
 
       {/* ── PRICING ───────────────────────────────────────────────────────────── */}
-      <section id="pricing-section" className="max-w-7xl mx-auto px-6 pb-24 pt-4">
+      <section data-layer="true" id="pricing-section" className="max-w-7xl mx-auto px-6 pb-24 pt-4">
 
         {/* Header */}
         <div id="pricing-title" className="mb-14 max-w-3xl">
@@ -1653,7 +1698,7 @@ export default function Home() {
       </section>
 
       {/* ── TESTIMONIALS — MARQUEE ────────────────────────────────────────────── */}
-      <section id="testimonials" className="pb-24 pt-4 overflow-hidden">
+      <section data-layer="true" id="testimonials" className="pb-24 pt-4 overflow-hidden">
         <div id="reviews-header" className="max-w-7xl mx-auto px-6 mb-14">
           <p className="text-[9px] uppercase tracking-[0.55em] text-orange-500 mb-5">{l.reviews.tag}</p>
           <div className="flex flex-col md:flex-row md:items-end gap-6 md:gap-12">
