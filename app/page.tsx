@@ -40,6 +40,162 @@ const useCountUp = (end: number) => {
   return { count, ref };
 };
 
+// ── Star Field ───────────────────────────────────────────────────────────────
+function StarField() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const resize = () => {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Stars — 3 layers by size
+    interface Star { x:number; y:number; r:number; base:number; speed:number; phase:number }
+    const stars: Star[] = [
+      // tiny background stars
+      ...Array.from({ length: 220 }, () => ({
+        x: Math.random(), y: Math.random(),
+        r: Math.random() * 0.8 + 0.3,
+        base: Math.random() * 0.5 + 0.35,
+        speed: Math.random() * 0.4 + 0.15,
+        phase: Math.random() * Math.PI * 2,
+      })),
+      // mid stars
+      ...Array.from({ length: 70 }, () => ({
+        x: Math.random(), y: Math.random(),
+        r: Math.random() * 0.9 + 1.0,
+        base: Math.random() * 0.35 + 0.55,
+        speed: Math.random() * 0.3 + 0.2,
+        phase: Math.random() * Math.PI * 2,
+      })),
+      // bright stars
+      ...Array.from({ length: 25 }, () => ({
+        x: Math.random(), y: Math.random(),
+        r: Math.random() * 1.2 + 1.8,
+        base: Math.random() * 0.2 + 0.8,
+        speed: Math.random() * 0.25 + 0.12,
+        phase: Math.random() * Math.PI * 2,
+      })),
+    ];
+
+    // Nebula glows (canvas-space fractions)
+    const nebulas = [
+      { fx:0.78, fy:0.18, r:420, r0:'rgba(249,115,22,0.28)', r1:'rgba(249,115,22,0)' },
+      { fx:0.18, fy:0.75, r:360, r0:'rgba(99,102,241,0.22)',  r1:'rgba(99,102,241,0)'  },
+      { fx:0.55, fy:0.48, r:300, r0:'rgba(139,92,246,0.18)',  r1:'rgba(139,92,246,0)'  },
+      { fx:0.35, fy:0.20, r:240, r0:'rgba(6,182,212,0.16)',   r1:'rgba(6,182,212,0)'   },
+    ];
+
+    // Shooting stars
+    interface Shoot { x:number; y:number; len:number; speed:number; angle:number; life:number; maxLife:number }
+    const shoots: Shoot[] = [];
+    const spawnShoot = () => {
+      shoots.push({
+        x: Math.random() * 0.7 + 0.05, y: Math.random() * 0.4,
+        len: Math.random() * 120 + 60,
+        speed: Math.random() * 0.0035 + 0.002,
+        angle: Math.PI / 5 + Math.random() * 0.3,
+        life: 0, maxLife: Math.random() * 80 + 60,
+      });
+    };
+
+    let animId: number;
+    let t = 0;
+    let shootTimer = 0;
+
+    const draw = () => {
+      const W = canvas.width;
+      const H = canvas.height;
+      // Fill background so canvas is opaque (not transparent over body)
+      ctx.fillStyle = '#0c0c0c';
+      ctx.fillRect(0, 0, W, H);
+
+      // Nebulas
+      nebulas.forEach(n => {
+        const grd = ctx.createRadialGradient(n.fx*W, n.fy*H, 0, n.fx*W, n.fy*H, n.r);
+        grd.addColorStop(0, n.r0);
+        grd.addColorStop(1, n.r1);
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, W, H);
+      });
+
+      // Stars
+      stars.forEach(s => {
+        const tw = Math.sin(t * s.speed + s.phase) * 0.3 + 0.7;
+        const op = Math.min(1, s.base * tw);
+        if (s.r > 1.5) {
+          // glow halo for bright stars
+          const haloR = s.r * 8;
+          const grd = ctx.createRadialGradient(s.x*W, s.y*H, 0, s.x*W, s.y*H, haloR);
+          grd.addColorStop(0, `rgba(200,215,255,${op*0.55})`);
+          grd.addColorStop(0.4, `rgba(200,215,255,${op*0.18})`);
+          grd.addColorStop(1, 'rgba(200,215,255,0)');
+          ctx.fillStyle = grd;
+          ctx.beginPath();
+          ctx.arc(s.x*W, s.y*H, haloR, 0, Math.PI*2);
+          ctx.fill();
+        }
+        ctx.beginPath();
+        ctx.arc(s.x*W, s.y*H, s.r, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(240,245,255,${op})`;
+        ctx.fill();
+      });
+
+      // Shooting stars
+      for (let i = shoots.length - 1; i >= 0; i--) {
+        const sh = shoots[i];
+        sh.x += Math.cos(sh.angle) * sh.speed;
+        sh.y += Math.sin(sh.angle) * sh.speed;
+        sh.life++;
+        const prog = sh.life / sh.maxLife;
+        const op = prog < 0.3 ? prog/0.3 : prog > 0.7 ? (1-prog)/0.3 : 1;
+        const grd = ctx.createLinearGradient(
+          sh.x*W, sh.y*H,
+          (sh.x - Math.cos(sh.angle)*sh.len/W)*W,
+          (sh.y - Math.sin(sh.angle)*sh.len/H)*H,
+        );
+        grd.addColorStop(0, `rgba(255,200,130,${op*0.95})`);
+        grd.addColorStop(1, 'rgba(255,200,130,0)');
+        ctx.strokeStyle = grd;
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.moveTo(sh.x*W, sh.y*H);
+        ctx.lineTo((sh.x - Math.cos(sh.angle)*sh.len/W)*W, (sh.y - Math.sin(sh.angle)*sh.len/H)*H);
+        ctx.stroke();
+        if (sh.life >= sh.maxLife) shoots.splice(i, 1);
+      }
+
+      // Spawn shooting star occasionally
+      shootTimer++;
+      if (shootTimer > 220 + Math.random()*180) { spawnShoot(); shootTimer = 0; }
+
+      t += 0.008;
+      animId = requestAnimationFrame(draw);
+    };
+
+    draw();
+    return () => {
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(animId);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{ position:'fixed', inset:0, width:'100%', height:'100%', zIndex:0, pointerEvents:'none', display:'block' }}
+    />
+  );
+}
+
 // ── Glasses SVG ──────────────────────────────────────────────────────────────
 function GlassesSVG({
   accent, modeId,
@@ -1019,7 +1175,18 @@ export default function Home() {
   const batteryLevel = `${Math.max(12, Math.min(batteryHovering ? batteryLive : energyVal, 100))}%`;
 
   return (
-    <main className="text-white" style={{ background: 'transparent' }}>
+    <>
+    <StarField />
+    {/* Film grain overlay */}
+    <div aria-hidden="true" style={{
+      position:'fixed', inset:0, width:'100%', height:'100%',
+      zIndex:2, pointerEvents:'none',
+      opacity:0.028,
+      backgroundImage:`url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+      backgroundRepeat:'repeat', backgroundSize:'180px 180px',
+      animation:'grain-shift 0.9s steps(1) infinite',
+    }} />
+    <main className="text-white" style={{ background: 'transparent', position: 'relative', zIndex: 3 }}>
       <Preloader visible={!isLoaded} />
 
       <style jsx global>{`
@@ -1039,18 +1206,23 @@ export default function Home() {
         .marquee-row:hover .marquee-track-reverse { animation-play-state: paused; }
         @keyframes blob-drift-1 {
           0%,100% { transform: translate(0px,0px) scale(1); }
-          30%     { transform: translate(60px,-80px) scale(1.08); }
-          60%     { transform: translate(-40px,50px) scale(0.94); }
+          30%     { transform: translate(70px,-90px) scale(1.1); }
+          60%     { transform: translate(-50px,60px) scale(0.92); }
         }
         @keyframes blob-drift-2 {
           0%,100% { transform: translate(0px,0px) scale(1); }
-          25%     { transform: translate(-70px,60px) scale(1.06); }
-          65%     { transform: translate(50px,-40px) scale(1.1); }
+          25%     { transform: translate(-80px,70px) scale(1.08); }
+          65%     { transform: translate(60px,-50px) scale(1.12); }
         }
         @keyframes blob-drift-3 {
           0%,100% { transform: translate(0px,0px) scale(1); }
-          40%     { transform: translate(30px,70px) scale(1.05); }
-          75%     { transform: translate(-55px,-30px) scale(0.96); }
+          40%     { transform: translate(40px,80px) scale(1.07); }
+          75%     { transform: translate(-65px,-35px) scale(0.94); }
+        }
+        @keyframes blob-drift-4 {
+          0%,100% { transform: translate(0px,0px) scale(1); }
+          35%     { transform: translate(-50px,-60px) scale(1.06); }
+          70%     { transform: translate(70px,40px) scale(0.96); }
         }
         @keyframes grain-shift {
           0%,100% { transform: translate(0,0); }
@@ -1059,23 +1231,19 @@ export default function Home() {
           60%     { transform: translate(-1%,4%); }
           80%     { transform: translate(2%,-2%); }
         }
+        @keyframes aurora-shift {
+          0%,100% { opacity: 0.7; transform: rotate(0deg) scale(1); }
+          33%     { opacity: 1;   transform: rotate(8deg) scale(1.06); }
+          66%     { opacity: 0.6; transform: rotate(-5deg) scale(0.97); }
+        }
         .bg-blob { will-change: transform; }
         html { scroll-behavior: smooth; background: #0c0c0c; overflow-x: hidden; }
-        body { background: #0c0c0c; margin: 0; padding: 0; overflow-x: hidden; overflow-y: scroll; scrollbar-width: none; -ms-overflow-style: none; }
+        body { background: transparent; margin: 0; padding: 0; overflow-x: hidden; overflow-y: scroll; scrollbar-width: none; -ms-overflow-style: none; }
         body::-webkit-scrollbar { display: none; }
         main { background: transparent !important; }
         .pin-spacer { background: transparent !important; }
         .hero-panel { will-change: transform, opacity; }
       `}</style>
-
-      {/* ── ANIMATED BACKGROUND ─────────────────────────────────────────────── */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
-        <div className="bg-blob absolute rounded-full" style={{ width:'900px',height:'900px',top:'-320px',right:'-280px',background:'radial-gradient(circle at center,rgba(249,115,22,0.055) 0%,rgba(249,115,22,0.018) 45%,transparent 72%)',animation:'blob-drift-1 28s ease-in-out infinite',filter:'blur(1px)' }} />
-        <div className="bg-blob absolute rounded-full" style={{ width:'700px',height:'700px',bottom:'-250px',left:'-180px',background:'radial-gradient(circle at center,rgba(249,115,22,0.04) 0%,rgba(180,80,10,0.015) 50%,transparent 72%)',animation:'blob-drift-2 36s ease-in-out infinite',filter:'blur(1px)' }} />
-        <div className="bg-blob absolute rounded-full" style={{ width:'480px',height:'480px',top:'42%',right:'8%',background:'radial-gradient(circle at center,rgba(249,115,22,0.032) 0%,transparent 68%)',animation:'blob-drift-3 22s ease-in-out infinite' }} />
-        <div className="absolute inset-0" style={{ backgroundImage:'radial-gradient(circle,rgba(255,255,255,0.055) 1px,transparent 1px)',backgroundSize:'40px 40px',maskImage:'radial-gradient(ellipse 90% 90% at 50% 50%,black 30%,transparent 100%)',WebkitMaskImage:'radial-gradient(ellipse 90% 90% at 50% 50%,black 30%,transparent 100%)' }} />
-        <div style={{ position:'absolute',inset:'-50%',width:'200%',height:'200%',opacity:0.028,backgroundImage:`url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,backgroundRepeat:'repeat',backgroundSize:'180px 180px',animation:'grain-shift 0.9s steps(1) infinite' }} />
-      </div>
 
       {/* Scroll progress */}
       <div id="scroll-progress" className="fixed top-0 left-0 right-0 h-[2px] z-50 bg-orange-500" style={{ transform: 'scaleX(0)', transformOrigin: 'left' }} />
@@ -2316,5 +2484,6 @@ export default function Home() {
       )}
 
     </main>
+    </>
   );
 }
