@@ -1,5 +1,6 @@
 ﻿"use client";
 import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { t, COVER_IMAGES } from './constants';
@@ -8,6 +9,10 @@ import { Preloader } from './components/Preloader';
 import { VisionShowcase } from './components/showcase/VisionShowcase';
 import { VisionConfigurator } from './components/showcase/VisionConfigurator';
 
+const ThreeTestSceneLazy = dynamic(
+  () => import('./components/three/ThreeTestScene').then((m) => ({ default: m.ThreeTestScene })),
+  { ssr: false, loading: () => null },
+);
 
 export default function Home() {
   const [lang, setLang] = useState<'en' | 'ru'>('ru');
@@ -51,7 +56,6 @@ export default function Home() {
   const [openFaq,   setOpenFaq]   = useState<number | null>(null);
   const [chatOpen,  setChatOpen]  = useState(false);
   const [chatTab,   setChatTab]   = useState<'home' | 'chat'>('home');
-  const [chatHover, setChatHover] = useState(false);
   const [chatMsg,   setChatMsg]   = useState('');
 
   type PlanType = typeof t.en.pricing.plans[number];
@@ -110,10 +114,21 @@ export default function Home() {
   // ── GSAP + Lenis ─────────────────────────────────────────────────────────
   useEffect(() => {
     let mounted = true;
-    let stRef: { getAll(): { kill(): void }[] } | undefined;
+    let stRef:
+      | {
+          getAll(): { kill(): void }[];
+          scrollerProxy: (t: Element, vars?: Record<string, unknown>) => void;
+        }
+      | undefined;
     let cfProxy: HTMLElement | null = null;
     let cfDraggable: { kill(): void }[] = [];
-    let lenisInst: { raf:(t:number)=>void; on:(e:string,cb:()=>void)=>void; destroy:()=>void } | null = null;
+    let lenisInst: {
+      raf: (t: number) => void;
+      on: (e: string, cb: () => void) => void;
+      destroy: () => void;
+      scroll: number;
+      scrollTo: (target: number, opts?: { immediate?: boolean }) => void;
+    } | null = null;
     let lenisCb: ((t:number)=>void) | null = null;
     let gsapRef: { ticker: { remove:(cb:(t:number)=>void)=>void } } | null = null;
 
@@ -129,14 +144,33 @@ export default function Home() {
 
       // ── Lenis smooth scroll ─────────────────────────────────────────────
       lenisInst = new Lenis({
-        duration: 1.15,
+        // Defaults из Lenis (~1.2s) — чуть мягче колесо, меньше «дёрганья» с GSAP
+        duration: 1.22,
         easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         smoothWheel: true,
+        wheelMultiplier: 0.92,
+        touchMultiplier: 1,
+        syncTouch: false,
       }) as typeof lenisInst;
       lenisInst!.on('scroll', () => ScrollTrigger.update());
       lenisCb = (time: number) => lenisInst?.raf(time * 1000);
       gsap.ticker.add(lenisCb);
       gsap.ticker.lagSmoothing(0);
+
+      ScrollTrigger.scrollerProxy(document.documentElement, {
+        scrollTop(value?: number) {
+          if (!lenisInst) return 0;
+          if (value !== undefined) {
+            lenisInst.scrollTo(value, { immediate: true });
+          }
+          return lenisInst.scroll;
+        },
+        getBoundingClientRect() {
+          return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight };
+        },
+        pinType: document.documentElement.style.transform ? 'transform' : 'fixed',
+      });
+      ScrollTrigger.refresh();
 
       // Scroll progress bar
       gsap.to('#scroll-progress', {
@@ -342,8 +376,22 @@ export default function Home() {
         gsap.fromTo(el, { opacity: 0, x: -30 }, { opacity: 1, x: 0, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 90%', end: 'top 62%', scrub: 0.6 } });
       });
 
-      // ── Footer ────────────────────────────────────────────────────────────
-      gsap.fromTo('footer', { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: 'power2.out', scrollTrigger: { trigger: 'footer', start: 'top 90%', end: 'top 60%', scrub: 0.6 } });
+      // ── Footer (no scrub: layout height changes on language toggle would leave scrub stuck at opacity 0)
+      gsap.fromTo(
+        '#site-footer',
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          ease: 'power2.out',
+          duration: 0.75,
+          scrollTrigger: {
+            trigger: '#site-footer',
+            start: 'top 90%',
+            toggleActions: 'play none none none',
+          },
+        },
+      );
 
       // ── Heading blur-reveal ───────────────────────────────────────────────
       gsap.utils.toArray<Element>('.blur-reveal').forEach(el => {
@@ -376,7 +424,10 @@ export default function Home() {
     loadGSAP();
     return () => {
       mounted = false;
-      if (stRef) stRef.getAll().forEach(trigger => trigger.kill());
+      if (stRef) {
+        stRef.getAll().forEach(trigger => trigger.kill());
+        stRef.scrollerProxy(document.documentElement);
+      }
       cfDraggable.forEach(d => d.kill());
       if (cfProxy) { cfProxy.remove(); cfProxy = null; }
       if (lenisCb && gsapRef) gsapRef.ticker.remove(lenisCb);
@@ -392,13 +443,78 @@ export default function Home() {
     <div aria-hidden="true" style={{
       position:'fixed', inset:0, width:'100%', height:'100%',
       zIndex:2, pointerEvents:'none',
-      opacity:0.028,
+      opacity:0.055,
       backgroundImage:`url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
       backgroundRepeat:'repeat', backgroundSize:'180px 180px',
       animation:'grain-shift 0.9s steps(1) infinite',
     }} />
-    <main className="text-white" style={{ background: 'transparent', position: 'relative', zIndex: 3 }}>
+    <main className="text-white pt-20" style={{ background: 'transparent', position: 'relative', zIndex: 3 }}>
       <Preloader visible={!isLoaded} />
+
+      {/* Global immersive background elements */}
+      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'linear-gradient(165deg, #03050a 0%, #020208 48%, #010101 100%)',
+          }}
+        />
+        {/* Пятна: общий blur(100px) для глубины; сами градиенты без дублирующего blur */}
+        <div
+          className="absolute inset-0 overflow-hidden"
+          style={{ filter: 'blur(100px)', WebkitFilter: 'blur(100px)' }}
+        >
+          <div
+            className="bg-blob absolute rounded-full"
+            style={{
+              width: '1240px',
+              height: '1240px',
+              top: '-400px',
+              right: '-360px',
+              background:
+                'radial-gradient(circle at center, rgba(249,115,22,0.14) 0%, rgba(249,115,22,0.12) 22%, rgba(249,115,22,0.05) 48%, transparent 72%)',
+              animation: 'blob-drift-1 16s ease-in-out infinite',
+            }}
+          />
+          <div
+            className="bg-blob absolute rounded-full"
+            style={{
+              width: '1020px',
+              height: '1020px',
+              bottom: '-300px',
+              left: '-240px',
+              background:
+                'radial-gradient(circle at center, rgba(99,102,241,0.18) 0%, rgba(79,70,229,0.11) 32%, rgba(49,46,129,0.06) 55%, transparent 74%)',
+              animation: 'blob-drift-2 18s ease-in-out infinite',
+            }}
+          />
+          <div
+            className="bg-blob absolute rounded-full"
+            style={{
+              width: '780px',
+              height: '780px',
+              top: '36%',
+              right: '2%',
+              background:
+                'radial-gradient(circle at center, rgba(249,115,22,0.11) 0%, rgba(249,115,22,0.12) 18%, rgba(249,115,22,0.04) 42%, transparent 70%)',
+              animation: 'blob-drift-3 13s ease-in-out infinite',
+            }}
+          />
+          <div
+            className="bg-blob absolute rounded-full"
+            style={{
+              width: '920px',
+              height: '920px',
+              top: '6%',
+              left: '-220px',
+              background:
+                'radial-gradient(circle at center, rgba(139,92,246,0.14) 0%, rgba(109,40,217,0.09) 36%, rgba(59,7,100,0.05) 58%, transparent 76%)',
+              animation: 'blob-drift-4 20s ease-in-out infinite',
+            }}
+          />
+        </div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_50%_50%,transparent_36%,rgba(1,1,1,0.42)_100%)]" />
+      </div>
 
       <style jsx global>{`
         @keyframes heartbeat  { 0%, 100% { transform: scale(1); }    50% { transform: scale(1.08); } }
@@ -406,9 +522,18 @@ export default function Home() {
         @keyframes flowLine   { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
         @keyframes ekgScroll  { from { transform: translateX(0%); }  to   { transform: translateX(-50%); } }
         @keyframes blink      { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
-        @keyframes chatBounce { 0%,100%{transform:scale(1)} 30%{transform:scale(1.18)} 60%{transform:scale(0.93)} }
-        .chat-btn-idle { animation: chatBounce 3.6s ease-in-out infinite; }
-        .chat-btn-idle:hover { animation: none; }
+        @keyframes chat-fab-attn {
+          0%, 100% {
+            transform: scale(1);
+            box-shadow: 0 10px 36px rgba(249, 115, 22, 0.55), 0 0 0 0 rgba(249, 115, 22, 0.4);
+          }
+          50% {
+            transform: scale(1.04);
+            box-shadow: 0 14px 48px rgba(249, 115, 22, 0.7), 0 0 0 14px rgba(249, 115, 22, 0);
+          }
+        }
+        .chat-fab-attn { animation: chat-fab-attn 2.6s ease-in-out infinite; }
+        .chat-fab-attn:hover { animation: none; }
         @keyframes marquee         { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         @keyframes marquee-reverse { from { transform: translateX(-50%); } to { transform: translateX(0); } }
         .marquee-track         { animation: marquee 38s linear infinite; }
@@ -417,23 +542,23 @@ export default function Home() {
         .marquee-row:hover .marquee-track-reverse { animation-play-state: paused; }
         @keyframes blob-drift-1 {
           0%,100% { transform: translate(0px,0px) scale(1); }
-          30%     { transform: translate(70px,-90px) scale(1.1); }
-          60%     { transform: translate(-50px,60px) scale(0.92); }
+          30%     { transform: translate(110px,-120px) scale(1.14); }
+          60%     { transform: translate(-85px,95px) scale(0.88); }
         }
         @keyframes blob-drift-2 {
           0%,100% { transform: translate(0px,0px) scale(1); }
-          25%     { transform: translate(-80px,70px) scale(1.08); }
-          65%     { transform: translate(60px,-50px) scale(1.12); }
+          25%     { transform: translate(-105px,95px) scale(1.1); }
+          65%     { transform: translate(90px,-75px) scale(1.12); }
         }
         @keyframes blob-drift-3 {
           0%,100% { transform: translate(0px,0px) scale(1); }
-          40%     { transform: translate(40px,80px) scale(1.07); }
-          75%     { transform: translate(-65px,-35px) scale(0.94); }
+          40%     { transform: translate(70px,105px) scale(1.09); }
+          75%     { transform: translate(-95px,-55px) scale(0.9); }
         }
         @keyframes blob-drift-4 {
           0%,100% { transform: translate(0px,0px) scale(1); }
-          35%     { transform: translate(-50px,-60px) scale(1.06); }
-          70%     { transform: translate(70px,40px) scale(0.96); }
+          35%     { transform: translate(95px,85px) scale(1.1); }
+          70%     { transform: translate(-80px,-110px) scale(0.92); }
         }
         @keyframes grain-shift {
           0%,100% { transform: translate(0,0); }
@@ -448,8 +573,9 @@ export default function Home() {
           66%     { opacity: 0.6; transform: rotate(-5deg) scale(0.97); }
         }
         .bg-blob { will-change: transform; }
-        html { scroll-behavior: smooth; background: #0c0c0c; overflow-x: hidden; }
-        body { background: transparent; margin: 0; padding: 0; overflow-x: hidden; overflow-y: scroll; scrollbar-width: none; -ms-overflow-style: none; }
+        /* Lenis сам сглаживает скролл — native smooth на html даёт двойное сглаживание и шероховатость */
+        html { scroll-behavior: auto !important; overflow-x: hidden; }
+        body { margin: 0; padding: 0; overflow-x: hidden; overflow-y: scroll; scrollbar-width: none; -ms-overflow-style: none; }
         body::-webkit-scrollbar { display: none; }
         main { background: transparent !important; }
         .pin-spacer { background: transparent !important; }
@@ -457,7 +583,7 @@ export default function Home() {
       `}</style>
 
       {/* Scroll progress */}
-      <div id="scroll-progress" className="fixed top-0 left-0 right-0 h-[2px] z-50 bg-orange-500" style={{ transform: 'scaleX(0)', transformOrigin: 'left' }} />
+      <div id="scroll-progress" className="fixed top-0 left-0 right-0 z-[60] h-[2px] bg-orange-500" style={{ transform: 'scaleX(0)', transformOrigin: 'left' }} />
 
       {/* ── NAV ─────────────────────────────────────────────────────────────── */}
       {(() => {
@@ -482,7 +608,7 @@ export default function Home() {
           },
         ];
         return (
-          <header className="fixed inset-x-0 top-0 z-40">
+          <header className="fixed top-0 left-0 z-50 w-full border-b border-white/[0.06] bg-black/45 backdrop-blur-xl">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
               <a href="/" onClick={() => window.location.reload()} className="text-[11px] uppercase tracking-[0.5em] text-white font-black cursor-pointer select-none">Vision Run</a>
 
@@ -561,19 +687,9 @@ export default function Home() {
 
       {/* ── HERO WRAPPER — scroll distance for pinned panels ────────────────── */}
       <div id="hero-wrapper" style={{ height: 'calc(100vh + 1600px)' }}>
-        <section id="hero-section" className="sticky top-0 h-screen w-full overflow-hidden bg-[#0c0c0c]">
+        <section id="hero-section" className="sticky top-0 h-screen w-full overflow-hidden bg-transparent">
 
-          {/* Mirror of global background inside hero (overflow-hidden clips fixed elements) */}
-          <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
-            <div className="bg-blob absolute rounded-full" style={{ width:'900px',height:'900px',top:'-320px',right:'-280px',background:'radial-gradient(circle at center,rgba(249,115,22,0.055) 0%,rgba(249,115,22,0.018) 45%,transparent 72%)',animation:'blob-drift-1 28s ease-in-out infinite',filter:'blur(1px)' }} />
-            <div className="bg-blob absolute rounded-full" style={{ width:'700px',height:'700px',bottom:'-250px',left:'-180px',background:'radial-gradient(circle at center,rgba(249,115,22,0.04) 0%,rgba(180,80,10,0.015) 50%,transparent 72%)',animation:'blob-drift-2 36s ease-in-out infinite',filter:'blur(1px)' }} />
-            <div className="bg-blob absolute rounded-full" style={{ width:'480px',height:'480px',top:'42%',right:'8%',background:'radial-gradient(circle at center,rgba(249,115,22,0.032) 0%,transparent 68%)',animation:'blob-drift-3 22s ease-in-out infinite' }} />
-
-            <div style={{ position:'absolute',inset:'-50%',width:'200%',height:'200%',opacity:0.028,backgroundImage:`url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,backgroundRepeat:'repeat',backgroundSize:'180px 180px',animation:'grain-shift 0.9s steps(1) infinite' }} />
-          </div>
-
-          {/* Vignette for depth */}
-          <div className="absolute inset-0 z-[1] pointer-events-none bg-[radial-gradient(ellipse_120%_80%_at_50%_50%,transparent_40%,rgba(0,0,0,0.45)_100%)]" />
+          {/* Vignette for depth is now global */}
 
           {/* ── PANEL 1: Brand intro ──────────────────────────────────────── */}
           <div className="hero-panel absolute inset-0 flex">
@@ -640,10 +756,10 @@ export default function Home() {
               <div className="absolute rounded-full" style={{ width:'520px',height:'520px',top:'50%',left:'50%',transform:'translate(-30%,-50%)',background:'radial-gradient(circle at center,rgba(249,115,22,0.13) 0%,rgba(249,115,22,0.05) 40%,transparent 70%)',borderRadius:'50%' }} />
               <div className="absolute rounded-full" style={{ width:'280px',height:'280px',top:'18%',right:'12%',background:'radial-gradient(circle at center,rgba(249,115,22,0.07) 0%,transparent 70%)',borderRadius:'50%' }} />
               <div className="absolute" style={{ width:'340px',height:'200px',bottom:0,right:0,background:'radial-gradient(ellipse at bottom right,rgba(249,115,22,0.06) 0%,transparent 70%)' }} />
-              <div className="absolute inset-y-0 left-0 w-48 bg-gradient-to-r from-[#0c0c0c] to-transparent" />
-              <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#0c0c0c] to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#0c0c0c] to-transparent" />
-              <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#0c0c0c] to-transparent" />
+              <div className="absolute inset-y-0 left-0 w-48 bg-gradient-to-r from-[#010101] to-transparent" />
+              <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#010101] to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#010101] to-transparent" />
+              <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#010101] to-transparent" />
               <svg className="absolute inset-0 w-full h-full opacity-[0.04]" viewBox="0 0 400 600" fill="none" preserveAspectRatio="xMidYMid slice">
                 <line x1="0" y1="150" x2="400" y2="0" stroke="white" strokeWidth="0.5"/><line x1="0" y1="320" x2="400" y2="180" stroke="white" strokeWidth="0.5"/><line x1="0" y1="490" x2="400" y2="350" stroke="white" strokeWidth="0.5"/>
               </svg>
@@ -791,6 +907,10 @@ export default function Home() {
           </div>
 
         </section>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 has-[canvas]:pt-6 has-[canvas]:pb-4">
+        <ThreeTestSceneLazy />
       </div>
 
       {/* ── VISION SHOWCASE ───────────────────────────────────────────────────── */}
@@ -1104,8 +1224,8 @@ export default function Home() {
               </blockquote>
             ))}
           </div>
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#0c0c0c] to-transparent z-10" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#0c0c0c] to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#010101] to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#010101] to-transparent z-10" />
         </div>
         <div className="marquee-row relative">
           <div className="flex gap-4 marquee-track-reverse" style={{ width:'max-content' }}>
@@ -1121,8 +1241,8 @@ export default function Home() {
               </blockquote>
             ))}
           </div>
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#0c0c0c] to-transparent z-10" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#0c0c0c] to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#010101] to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#010101] to-transparent z-10" />
         </div>
       </section>
 
@@ -1273,22 +1393,70 @@ export default function Home() {
       </section>
 
       {/* ── FOOTER ────────────────────────────────────────────────────────────── */}
-      <footer className="border-t border-white/[0.06]">
+      <footer id="site-footer" className="border-t border-white/[0.06]">
         <div className="max-w-7xl mx-auto px-6 pt-14 pb-8">
-          <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.6fr_repeat(3,1fr)_1.2fr]">
-            <div className="sm:col-span-2 lg:col-span-1">
-              <div className="flex items-center gap-2 mb-5"><span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0" /><p className="text-[11px] font-black uppercase tracking-[0.5em] text-white">{l.footer.brand}</p></div>
-              <p className="text-sm text-white/50 leading-relaxed max-w-[220px]">{l.footer.sub}</p>
-            </div>
-            {l.footer.cols.map((col) => (
-              <div key={col.heading}>
-                <p className="text-[11px] uppercase tracking-[0.45em] text-white/45 mb-4">{col.heading}</p>
-                <ul className="space-y-3">{col.links.map((link) => (<li key={link.label}><a href={link.href} className="text-sm text-white/45 hover:text-white transition-colors duration-200">{link.label}</a></li>))}</ul>
+          <div
+            key={lang}
+            className="flex flex-col gap-12 lg:flex-row lg:items-start lg:justify-between lg:gap-10"
+          >
+            {/* Brand */}
+            <div className="min-w-0 shrink-0 lg:max-w-sm">
+              <div className="flex items-center gap-2 mb-5">
+                <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0" />
+                <p className="text-[11px] font-black uppercase tracking-[0.5em] text-white">{l.footer.brand}</p>
               </div>
-            ))}
-            <div>
+              <p className="text-sm text-white/50 leading-relaxed max-w-md">{l.footer.sub}</p>
+            </div>
+
+            {/* Тренировки, Продукт, Компания, Помощь — в ряд на md+, колонка на mobile */}
+            <div
+              className="flex min-w-0 flex-1 flex-col items-start justify-between gap-10 md:flex-row w-full"
+              aria-label="Footer navigation"
+            >
+              {l.footer.cols.map((col) => (
+                <div key={col.heading} className="flex min-w-0 flex-col">
+                  <p className="text-[11px] uppercase tracking-[0.45em] text-white/45 mb-4">{col.heading}</p>
+                  <ul className="flex flex-col gap-2.5">
+                    {col.links.map((link) => (
+                      <li key={link.label}>
+                        <a href={link.href} className="text-sm text-white/45 hover:text-white transition-colors duration-200">
+                          {link.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+              <div className="flex min-w-0 flex-col">
+                <p className="text-[11px] uppercase tracking-[0.45em] text-white/45 mb-4">{l.footer.support.heading}</p>
+                <ul className="flex flex-col gap-2.5">
+                  {l.footer.support.links.map((link) => {
+                    const external = link.href.startsWith('http');
+                    const faqTitle =
+                      lang === 'en' ? 'Frequently asked questions' : 'Часто задаваемые вопросы';
+                    return (
+                      <li key={link.label}>
+                        <a
+                          href={link.href}
+                          title={lang === 'en' && link.href === '#faq-section' ? faqTitle : undefined}
+                          {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                          className="text-sm font-bold text-white/85 hover:text-orange-400 transition-colors duration-200 leading-snug"
+                        >
+                          {link.label}
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+
+            {/* Контакты */}
+            <div className="flex min-w-0 shrink-0 flex-col lg:max-w-xs">
               <p className="text-[11px] uppercase tracking-[0.45em] text-white/45 mb-4">{l.footer.write}</p>
-              <a href="mailto:hello@visionrun.com" className="text-sm text-white/45 hover:text-orange-400 transition-colors duration-200 block mb-8">{l.footer.email}</a>
+              <a href="mailto:hello@visionrun.com" className="text-sm text-white/45 hover:text-orange-400 transition-colors duration-200 mb-6 lg:mb-5">
+                {l.footer.email}
+              </a>
               <p className="text-[11px] uppercase tracking-[0.45em] text-white/45 mb-4">{l.footer.follow}</p>
               <div className="flex items-center gap-3">
                 {[{href:'https://instagram.com/',icon:<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" strokeWidth="0"/></svg>},
@@ -1306,16 +1474,17 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* ── CHAT WIDGET ───────────────────────────────────────────────────────── */}
-      <div className="fixed bottom-6 right-6 z-[90] flex flex-col items-end gap-3">
+      {/* ── CHAT WIDGET — high-contrast trigger (label always visible, not hover-only) ─ */}
+      <div className="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-[95] flex flex-col items-end gap-3 max-w-[calc(100vw-2rem)]">
 
         {/* Panel */}
         <motion.div
+          id="vision-run-chat-panel"
           initial={false}
           animate={chatOpen ? { y: 0, scale: 1, opacity: 1 } : { y: 20, scale: 0.95, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 340, damping: 28 }}
           style={{ pointerEvents: chatOpen ? 'auto' : 'none', transformOrigin: 'bottom right' }}
-          className="w-[340px] rounded-[1.75rem] border border-white/[0.1] bg-[#111] shadow-[0_24px_80px_rgba(0,0,0,0.75)] overflow-hidden relative"
+          className="w-[340px] max-w-[min(340px,calc(100vw-2rem))] rounded-[1.75rem] border border-white/[0.1] bg-[#111] shadow-[0_24px_80px_rgba(0,0,0,0.75)] overflow-hidden relative"
         >
           <div className="absolute inset-x-0 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-orange-500/60 to-transparent pointer-events-none z-10" />
 
@@ -1455,29 +1624,34 @@ export default function Home() {
           </div>
         </motion.div>
 
-        {/* Trigger button row */}
-        <div className="flex items-center gap-3">
-          <motion.div
-            animate={{ x:(chatHover&&!chatOpen)?0:10, opacity:(chatHover&&!chatOpen)?1:0, scale:(chatHover&&!chatOpen)?1:0.94 }}
-            transition={{ type:'spring', stiffness:340, damping:26 }}
-            style={{ pointerEvents:'none' }}
-          >
-            <span className="px-4 py-2.5 rounded-full border border-white/[0.1] bg-[#111] text-xs font-bold text-white whitespace-nowrap shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
-              {lang==='ru'?'Написать нам 👋':'Chat with us 👋'}
-            </span>
-          </motion.div>
-          <button
-            onClick={()=>{setChatOpen(v=>!v);setChatTab('home');}}
-            onMouseEnter={()=>setChatHover(true)}
-            onMouseLeave={()=>setChatHover(false)}
-            className={`relative w-14 h-14 rounded-full bg-orange-500 text-black shadow-[0_8px_32px_rgba(249,115,22,0.45)] hover:bg-white hover:shadow-[0_8px_32px_rgba(255,255,255,0.2)] transition-all duration-300 flex items-center justify-center ${!chatOpen?'chat-btn-idle':''}`}
-          >
-            <motion.span animate={{ rotate: chatOpen?90:0, scale: chatOpen?0.7:1, opacity: chatOpen?0:1 }} transition={{ type:'spring', stiffness:320, damping:24 }} style={{ position:'absolute' }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            </motion.span>
-            <motion.span animate={{ rotate: chatOpen?0:-90, scale: chatOpen?1:0.7, opacity: chatOpen?1:0 }} transition={{ type:'spring', stiffness:320, damping:24 }} style={{ position:'absolute', fontSize:'22px', lineHeight:1, fontWeight:900 }}>×</motion.span>
-          </button>
-        </div>
+        {/* Trigger: pill + label always visible; compact X circle when open */}
+        <button
+          type="button"
+          aria-expanded={chatOpen}
+          aria-controls="vision-run-chat-panel"
+          aria-label={lang === 'ru' ? 'Открыть поддержку Vision Run' : 'Open Vision Run support'}
+          onClick={() => { setChatOpen((v) => !v); setChatTab('home'); }}
+          className={
+            chatOpen
+              ? 'relative flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-orange-500 text-black shadow-[0_8px_32px_rgba(249,115,22,0.5)] ring-2 ring-orange-300/50 transition-all duration-300 hover:bg-orange-400 hover:shadow-[0_8px_36px_rgba(249,115,22,0.6)] focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-200 focus-visible:ring-offset-2 focus-visible:ring-offset-[#010101]'
+              : 'chat-fab-attn relative flex max-w-full items-center gap-2.5 rounded-full border border-orange-400/60 bg-orange-500 py-3 pl-3.5 pr-4 text-black shadow-[0_10px_40px_rgba(249,115,22,0.45)] transition-all duration-300 hover:bg-orange-400 hover:shadow-[0_12px_44px_rgba(249,115,22,0.55)] focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-200 focus-visible:ring-offset-2 focus-visible:ring-offset-[#010101] sm:gap-3 sm:pl-4 sm:pr-5 sm:py-3.5'
+          }
+        >
+          {!chatOpen ? (
+            <>
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+              </span>
+              <span className="whitespace-nowrap pr-0.5 text-left font-black uppercase leading-none tracking-[0.2em] text-[10px] sm:tracking-[0.24em] sm:text-[11px]">
+                {lang === 'ru' ? 'Поддержка' : 'Support'}
+              </span>
+            </>
+          ) : (
+            <span className="text-[26px] font-black leading-none" aria-hidden>×</span>
+          )}
+        </button>
       </div>
 
       {/* ── PLAN MODAL ────────────────────────────────────────────────────────── */}

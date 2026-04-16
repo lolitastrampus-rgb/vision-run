@@ -16,7 +16,9 @@ export function Preloader({ visible }: { visible: boolean }) {
           exit={{ opacity: 0, scale: 1.06, filter: 'blur(18px)' }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           className="fixed inset-0 z-[9999] flex flex-col items-center justify-center select-none pointer-events-none"
-          style={{ background: '#0c0c0c' }}
+          style={{
+            background: 'linear-gradient(165deg, #03050a 0%, #020208 48%, #010101 100%)',
+          }}
           aria-busy="true"
           aria-live="polite"
           aria-label="Loading"

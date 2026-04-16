@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist_Mono, Inter, Oswald } from "next/font/google";
+import "lenis/dist/lenis.css";
 import "./globals.css";
 
 const inter = Inter({

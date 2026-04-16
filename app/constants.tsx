@@ -42,7 +42,7 @@ export interface Lang {
   faq:     { tag: string; bannerTitle: string; bannerSub: string; items: FaqItem[] };
   cta:     { tag: string; title: string; sub: string; btn1: string; btn2: string };
   social:  { tag: string; title: string; items: SocialItem[] };
-  footer:  { brand: string; sub: string; cols: FooterCol[]; write: string; email: string; follow: string; legal: string[]; copy: string; tagline: string };
+  footer:  { brand: string; sub: string; cols: FooterCol[]; support: FooterCol; write: string; email: string; follow: string; legal: string[]; copy: string; tagline: string };
   stats:   { ms: string; sensors: string; battery: string };
   pricing: { tag: string; title: string; sub: string; monthly: string; yearly: string; plans: PricingPlan[] };
 }
@@ -133,8 +133,18 @@ export const t: Record<'en' | 'ru', Lang> = {
       cols: [
         { heading: 'Training', links: [{ label: 'How it works', href: '#how-it-works' }, { label: 'Gear Up', href: '#modules-section' }, { label: 'Reviews', href: '#testimonials' }, { label: 'Pricing', href: '#pricing-section' }] },
         { heading: 'Product',  links: [{ label: 'AR Glasses',   href: '#how-it-works' }, { label: 'Vision App', href: '#ways-section' }, { label: 'Coach Hub', href: '#ways-section' }, { label: 'Modules', href: '#modules-section' }] },
-        { heading: 'Company',  links: [{ label: 'About',        href: '#how-it-works' }, { label: 'FAQ', href: '#faq-section' }, { label: 'Contact', href: 'mailto:hello@visionrun.com' }, { label: 'Blog', href: '#' }] },
+        { heading: 'Company',  links: [{ label: 'About', href: '#how-it-works' }, { label: 'Blog', href: '#' }] },
       ],
+      support: {
+        heading: 'Help & Support',
+        links: [
+          { label: 'Contact us', href: 'mailto:hello@visionrun.com' },
+          { label: 'FAQ', href: '#faq-section' },
+          { label: 'Telegram', href: 'https://t.me/' },
+          { label: 'Instagram', href: 'https://instagram.com/' },
+          { label: 'Discord', href: 'https://discord.com/' },
+        ],
+      },
       write: 'Write to us', email: 'hello@visionrun.com', follow: 'Follow us',
       legal: ['Privacy Policy', 'Terms of Service'],
       copy: '© 2026 Vision Run', tagline: 'Faster. Stronger. No limits.',
@@ -234,8 +244,18 @@ export const t: Record<'en' | 'ru', Lang> = {
       cols: [
         { heading: 'Тренировки', links: [{ label: 'Как это работает', href: '#how-it-works' }, { label: 'Снаряжение', href: '#modules-section' }, { label: 'Отзывы', href: '#testimonials' }, { label: 'Тарифы', href: '#pricing-section' }] },
         { heading: 'Продукт',   links: [{ label: 'AR-очки',          href: '#how-it-works' }, { label: 'Vision App', href: '#ways-section' }, { label: 'Coach Hub', href: '#ways-section' }, { label: 'Модули', href: '#modules-section' }] },
-        { heading: 'Компания',  links: [{ label: 'О нас',             href: '#how-it-works' }, { label: 'FAQ', href: '#faq-section' }, { label: 'Контакты', href: 'mailto:hello@visionrun.com' }, { label: 'Блог', href: '#' }] },
+        { heading: 'Компания',  links: [{ label: 'О нас', href: '#how-it-works' }, { label: 'Блог', href: '#' }] },
       ],
+      support: {
+        heading: 'Помощь и поддержка',
+        links: [
+          { label: 'Связаться с нами', href: 'mailto:hello@visionrun.com' },
+          { label: 'FAQ (Часто задаваемые вопросы)', href: '#faq-section' },
+          { label: 'Telegram', href: 'https://t.me/' },
+          { label: 'Instagram', href: 'https://instagram.com/' },
+          { label: 'Discord', href: 'https://discord.com/' },
+        ],
+      },
       write: 'Написать нам', email: 'hello@visionrun.com', follow: 'Соцсети',
       legal: ['Политика конфиденциальности', 'Условия использования'],
       copy: '© 2026 Vision Run', tagline: 'Быстрее. Сильнее. Без тормозов.',

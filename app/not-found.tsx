@@ -6,7 +6,10 @@ export default function NotFound() {
   return (
     <main
       className="relative min-h-screen flex flex-col items-center justify-center text-white overflow-hidden"
-      style={{ background: "#0c0c0c" }}
+      style={{
+        background:
+          "linear-gradient(165deg, #03050a 0%, #020208 48%, #010101 100%)",
+      }}
     >
       {/* Ambient glow */}
       <div

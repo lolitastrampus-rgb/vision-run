@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #03050a;
+  --foreground: #ededed;
+  --vr-bg-edge: #010101;
+  --vr-bg-gradient: linear-gradient(165deg, #03050a 0%, #020208 48%, #010101 100%);
 }
 
 @theme inline {
@@ -17,20 +19,18 @@
   font-family: var(--font-oswald), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 html {
   overflow-x: hidden;
   overflow-y: auto;
+  min-height: 100%;
+  background-color: var(--background);
+  background-image: var(--vr-bg-gradient);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
 body {
-  background: var(--background);
+  background: transparent;
   color: var(--foreground);
   overflow-x: hidden;
   overflow-y: visible;
